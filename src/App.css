@@ -1,0 +1,25 @@
+/* App layout */
+body {
+  display: block;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-right: 0;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  /* padding: 1rem; */
+}
+
+.content {
+  width: 100%;
+  padding-top: 50px;
+  padding-right:0;
+  /* padding-bottom: 1.5rem; */
+  flex: 1 0 auto;
+}

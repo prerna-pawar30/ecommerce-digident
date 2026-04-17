@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- ADD THIS SECTION --- */
+/* Hide the default browser eye icon in Edge and Internet Explorer */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* Hide the default browser eye/caps-lock icons in Webkit (Chrome/Safari) */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+}
+/* ------------------------- */

@@ -1,0 +1,24 @@
+
+.orange-pagination .swiper-pagination-bullet {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 999px !important;
+  background: #fdba74 !important;
+  opacity: 1 !important;
+}
+
+.orange-pagination .swiper-pagination-bullet-active {
+  width: 28px !important;
+  background: #E68736 !important;
+  box-shadow: 0 4px 12px rgba(230, 135, 54, 0.4) !important;
+}
+
+.orange-pagination .swiper-pagination {
+  bottom: 20px !important;
+}
+
+@media (max-width: 768px) {
+  .orange-pagination .swiper-pagination {
+    display: none !important;
+  }
+}
