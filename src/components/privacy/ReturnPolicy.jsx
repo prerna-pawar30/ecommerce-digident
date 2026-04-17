@@ -1,4 +1,4 @@
-import LegalLayout, { SectionTitle, PolicyText, BulletList } from "./policy";
+import LegalLayout, { SectionTitle, PolicyText, BulletList } from "../../pages/PolicyPage";
 
 export default function ReturnPolicy() {
   return (

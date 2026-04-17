@@ -1,4 +1,4 @@
-import LegalLayout, { SectionTitle, PolicyText } from "./policy";
+import LegalLayout, { SectionTitle, PolicyText } from "../../pages/PolicyPage";
 
 export default function TermsOfUse() {
   return (
