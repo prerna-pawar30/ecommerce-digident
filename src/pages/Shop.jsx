@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import {
@@ -67,7 +66,7 @@ function Shop() {
           banners: bannerRes?.data?.banners || [],
           
           // Total Count
-          totalProducts: activeRes?.data?.totalProducts || 0
+          totalProducts: activeRes?.data?.pagination?.totalItems || 0, 
         });
       } catch (error) {
         console.error("Dashboard Load Error:", error);

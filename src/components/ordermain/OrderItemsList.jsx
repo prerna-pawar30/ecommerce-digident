@@ -97,19 +97,20 @@ export default function OrderItemsList({
 
         <div className="bg-[#FFFBF7] p-8 border-t border-orange-50">
           <div className="max-w-xs ml-auto space-y-3 text-right">
-            <div className="flex justify-between text-[16px] text-gray-600">
+           <div className="flex justify-between text-[16px] font-bold text-gray-600">
               <span>Subtotal (Items):</span>
               <span>
                 ₹
                 {(
-                  order.grandTotal + (order.coupon?.discountAmount || 0)
+                  order.grandTotal + 
+                  (order.coupon?.discountAmount || 0) - 
+                  (order.gstAmount || 0)
                 ).toLocaleString()}
               </span>
             </div>
-
             {order.gstAmount > 0 && (
               <div className="flex justify-between text-[16px] font-bold text-gray-400 uppercase tracking-tight">
-                <span>Incl. GST:</span>
+                <span>GST:</span>
                 <span>
                   ₹
                   {order.gstAmount.toLocaleString(undefined, {

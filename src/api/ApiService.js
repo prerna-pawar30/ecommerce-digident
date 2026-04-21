@@ -94,3 +94,34 @@ export const updateUserProfile = (formData) =>
   safeRequest(apiClient.put(API_ROUTES.USER.UPDATE_PROFILE, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }));
+
+  // --- PRODUCT REVIEW SERVICES ---
+
+/**
+ * Creates a new product review
+ * @param {Object} data - The review details (productType, reviewerInfo, ratings, overallSatisfaction, comments)
+ */
+export const createProductReview = (data) => 
+  safeRequest(apiClient.post(API_ROUTES.PRODUCTREVIEWS.ADD, data));
+
+/**
+ * Fetches all reviews for a specific product
+ * @param {string} id - The product or review category ID
+ */
+export const fetchProductReviews = (id) => 
+  safeRequest(apiClient.get(API_ROUTES.PRODUCTREVIEWS.GET_ALL(id)));
+
+/**
+ * Updates an existing review
+ * @param {string} id - The unique review ID (reviewId)
+ * @param {Object} data - The updated review fields
+ */
+export const updateProductReview = (id, data) => 
+  safeRequest(apiClient.put(API_ROUTES.PRODUCTREVIEWS.UPDATE(id), data));
+
+/**
+ * Deletes a review
+ * @param {string} id - The unique review ID
+ */
+export const deleteProductReview = (id) => 
+  safeRequest(apiClient.delete(API_ROUTES.PRODUCTREVIEWS.DELETE(id)));

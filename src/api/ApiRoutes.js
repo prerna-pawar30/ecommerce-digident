@@ -19,7 +19,7 @@ export const API_ROUTES = {
   },
 
   BRANDS: {
-    ALL: `${VERSION}/brand/all`,
+    ALL: `${VERSION}/brand/all?limit=100`,
   },
 
   CATEGORIES: {
@@ -66,5 +66,12 @@ COUPONS: {
     RETURN: `${VERSION}/order/return`,
     UPDATE_RETURN: (oId, rId) => `${VERSION}/order/return/update/${oId}/${rId}`,
     REFUND_COMPLETE: (id) => `${VERSION}/order/refund/complete/${id}`,
+  },
+
+  PRODUCTREVIEWS: {
+    ADD: `${VERSION}/product-review/create`,
+    GET_ALL: (id) => `${VERSION}/product-review/all/${id}`,
+    UPDATE: (id) => `${VERSION}/product-review/update/${id}`,
+    DELETE: (id) => `${VERSION}/product-review/delete/${id}`,
   },
 };

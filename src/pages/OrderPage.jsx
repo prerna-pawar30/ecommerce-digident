@@ -1,4 +1,3 @@
-/* eslint-disable no-empty */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
@@ -6,8 +5,8 @@ import apiClient from "../utils/ApiClient";
 import { Loader2 } from "lucide-react";
 import OrderProgressTracker from "../components/ui/OrderProgressTracker";
 import Breadcrumb from "../components/ui/Breadcrumb";
-import logoMain from "../assets/home/digident-logo.webp";
-import logoWatermark from "../assets/home/digident-logo2.webp";
+import logoMain from "../assets/home/digident-logo.png";
+import logoWatermark from "../assets/home/digident-png 2.png";
 import Swal from "sweetalert2";
 import { fetchOrderDetails, cancelOrder, returnOrderItems, updateReturnOrder, completeRefund } from "../api/ApiService";
 import { useNavigate } from "react-router-dom";
@@ -47,7 +46,6 @@ const OrderDetailsPage = () => {
 
     try {
       const res = await fetchOrderDetails(orderId);
-      // ApiService safeRequest already returns res.data
       setOrder(res.data.order);
     } catch (error) {
       console.error("Fetch order failed:", error);
@@ -60,8 +58,7 @@ const OrderDetailsPage = () => {
     fetchOrder();
   }, [fetchOrder]);
 
- 
-/* ================= RETURN / UPDATE LOGIC ================= */
+  /* ================= RETURN / UPDATE LOGIC ================= */
   const handleReturnOrder = async () => {
     if (!order || !order.items) return;
 
@@ -181,190 +178,297 @@ const OrderDetailsPage = () => {
     }
   };
 
-  /* ================= INVOICE GENERATOR LOGIC (UNTOUCHED) ================= */
-  const handleDownloadInvoice = async () => {
-    if (!order || !order.items) return;
-    const { default: jsPDF } = await import("jspdf");
-    const { default: autoTable } = await import("jspdf-autotable");
-    const doc = new jsPDF();
-    const orange = [230, 135, 54];
-    const black = [0, 0, 0];
-    const pageWidth = doc.internal.pageSize.width;
-    const pageHeight = doc.internal.pageSize.height;
+/* ================= COMPLETE UPDATED INVOICE GENERATOR ================= */
+const handleDownloadInvoice = async () => {
+  if (!order || !order.items) return;
 
-    doc.setFillColor(orange[0], orange[1], orange[2]);
-    doc.rect(0, 5, 45, 4, "F");
-    doc.rect(0, 11, 35, 4, "F");
-    doc.setFillColor(black[0], black[1], black[2]);
-    doc.rect(110, 0, pageWidth - 110, 13, "F");
-    doc.triangle(110, 0, 110, 13, 95, 0, "F");
+  const { default: jsPDF } = await import("jspdf");
+  const { default: autoTable } = await import("jspdf-autotable");
 
-    doc.setFontSize(32);
-    doc.setTextColor(0);
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+  // Constants based on Brand Identity
+  const ORANGE = [230, 135, 54];
+  const BLACK  = [0, 0, 0];
+  const WHITE  = [255, 255, 255];
+  const PW = doc.internal.pageSize.width;
+  const PH = doc.internal.pageSize.height;
+
+  // Data Transformation
+  const invoiceNo   = order.invoiceNumber || order.orderId?.substring(4, 12) || "N/A";
+  const customerNo  = order.customerNo    || order.orderId?.substring(0, 8)  || "N/A";
+  const orderNo     = order.orderNumber   || order.orderId || "N/A";
+  const csr         = order.csr           || "Vithalsir ( MD )";
+  const payTerms    = order.paymentTerms  || "Payable due amount in 10 days";
+  const tod         = order.termsOfDelivery   || "CIP Surat";
+  const shipCond    = order.shippingCondition || "Normal";
+
+  const fmtDate = (d) =>
+    d ? new Date(d).toLocaleDateString("en-GB") : new Date(order.createdAt).toLocaleDateString("en-GB");
+
+  const invoiceDate  = fmtDate(order.invoiceDate  || order.createdAt);
+  const dueDate      = fmtDate(order.dueDate);
+  const orderDate    = fmtDate(order.orderDate    || order.createdAt);
+  const deliveryDate = fmtDate(order.deliveryDate || order.createdAt);
+
+  const addr         = order.billingAddress || {};
+  const gstNo        = order.gstNumber || addr.gstin || "-";
+  const gstPct       = order.gstPercentage ?? 5;
+  const grandTotal   = order.grandTotal       || 0;
+  const gstAmount    = order.gstAmount        || 0;
+  const freight      = order.shippingCharge   || 0;
+  const paidAmount   = order.paidAmount       || 0;
+  const taxableVal   = grandTotal - gstAmount - freight;
+
+  const drawHeader = () => {
+    // Top Decorative Bars
+    doc.setFillColor(...ORANGE);
+    doc.rect(0, 4, 45, 4, "F");
+    doc.rect(0, 10, 34, 4, "F");
+
+    // Black Angled Header
+    doc.setFillColor(...BLACK);
+    doc.rect(108, 0, PW - 108, 14, "F");
+    doc.triangle(108, 0, 108, 14, 93, 0, "F");
+
+    // Invoice Title
     doc.setFont("helvetica", "bold");
-    doc.text("Tax Invoice", 14, 35);
+    doc.setFontSize(30);
+    doc.setTextColor(0);
+    doc.text("INVOICE", 14, 32);
 
+    // Logo Placement
     try {
-      doc.addImage(logoMain, "PNG", 150, 20, 45, 18);
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      doc.setFont("helvetica", "normal");
-      doc.text("Creating a World Of Smiles", 195, 40, { align: "right" });
-    } catch (e) {
-      console.warn("Logo asset missing");
+      doc.addImage(logoMain, "WEBP", 148, 16, 47, 18);
+    } catch {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(15);
+      doc.setTextColor(...ORANGE);
+      doc.text("Digident", 162, 9);
     }
-
-    doc.setTextColor(0);
-    let dataY = 60;
-    const col1 = 14;
-    const col2 = 78;
-    const col3 = 145;
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, "bold");
-    doc.text("Sold By:", col1, dataY);
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(10);
-    doc.text("DIGIDENT INDIA PRIVATE LIMITED", col1, dataY + 6);
-    doc.text("314, Sapna Sangeeta Road, Indore", col1, dataY + 11);
-    doc.text("Madhya Pradesh - 452001", col1, dataY + 16);
-    doc.setFont(undefined, "bold");
-    doc.text(`GSTIN: 23AAKCD9669F1ZA`, col1, dataY + 22);
-
-    const addr = order.billingAddress;
-    doc.setFontSize(11);
-    doc.setFont(undefined, "bold");
-    doc.text("Billing/Shipping Address:", col2, dataY);
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(10);
-    doc.text(addr?.fullName || "N/A", col2, dataY + 6);
-    doc.text(addr?.street || "", col2, dataY + 11, { maxWidth: 65 });
-    doc.text(`${addr?.city}, ${addr?.state}`, col2, dataY + 20);
-    doc.text(`PIN: ${addr?.pincode}`, col2, dataY + 25);
-    doc.setFont(undefined, "bold");
-    doc.text(`Customer GSTIN: ${order.gstNumber || "N/A"}`, col2, dataY + 31);
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, "bold");
-    doc.text("Order Details:", col3, dataY);
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(10);
-    doc.text(`Order ID: ${order.orderId?.substring(0, 15)}`, col3, dataY + 6);
-    doc.text(
-      `Order Date: ${new Date(order.createdAt).toLocaleDateString("en-GB")}`,
-      col3,
-      dataY + 11
-    );
-    doc.text(`Invoice No: #${order.orderId?.substring(4, 12)}`, col3, dataY + 16);
-    doc.text(
-      `Invoice Date: ${new Date(order.createdAt).toLocaleDateString("en-GB")}`,
-      col3,
-      dataY + 21
-    );
-    doc.text(`Courier: ${order.corourseServiceName || "N/A"}`, col3, dataY + 26);
-    doc.text(`Tracking: ${order.DOCNumber || "N/A"}`, col3, dataY + 31);
-
-    const tableRows =
-      order.items?.map((item) => [
-        item.sku,
-        `${item.productName}\n${item.variantName}`,
-        item.quantity,
-        item.price.toFixed(2),
-        "0.00",
-        "0.00",
-        (item.price * item.quantity).toFixed(2),
-        `${order.gstPercentage}%`,
-      ]) || [];
-
-    autoTable(doc, {
-      startY: dataY + 50,
-      head: [["SKU", "DESCRIPTION", "QTY", "GROSS AMT", "DISC", "DISC TOTAL", "TAXABLE VAL", "GST"]],
-      body: tableRows,
-      theme: "grid",
-      headStyles: {
-        fillColor: orange,
-        textColor: [255, 255, 255],
-        fontSize: 10,
-        fontStyle: "bold",
-      },
-      styles: { fontSize: 12, cellPadding: 3 },
-      columnStyles: { 1: { cellWidth: 45 } },
-    });
-
-    const footerY = pageHeight - 45;
-    doc.saveGraphicsState();
-    doc.setGState(new doc.GState({ opacity: 0.05 }));
-    try {
-      doc.addImage(logoWatermark, "PNG", 40, 100, 130, 100);
-    } catch (e) {}
-    doc.restoreGraphicsState();
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, "bold");
-    doc.setTextColor(0);
-    doc.text("DIGIDENT INDIA PRIVATE LIMITED.", 14, footerY);
-    doc.setFontSize(10);
-    doc.setFont(undefined, "normal");
-    doc.text("Regd: 314, Sapna Sangeeta Rd, near Matlani Garden,", 14, footerY + 6);
-    doc.text("Professor Colony, Indore, Madhya Pradesh 452001", 14, footerY + 11);
-    doc.text("Email: info@digident.in", 145, footerY + 16);
-    doc.text("Telephone: +91 9294503001", 145, footerY + 21);
-
-    doc.setFillColor(black[0], black[1], black[2]);
-    doc.rect(0, pageHeight - 12, 100, 12, "F");
-    doc.triangle(100, pageHeight - 12, 100, pageHeight, 115, pageHeight, "F");
-    doc.setFillColor(orange[0], orange[1], orange[2]);
-    doc.rect(160, pageHeight - 6, 50, 6, "F");
-    doc.triangle(160, pageHeight - 6, 160, pageHeight, 145, pageHeight, "F");
-
-    doc.addPage();
-    doc.setFillColor(orange[0], orange[1], orange[2]);
-    doc.rect(0, 5, 45, 4, "F");
-    doc.setFillColor(black[0], black[1], black[2]);
-    doc.rect(110, 0, pageWidth - 110, 13, "F");
-
-    doc.setFontSize(24);
-    doc.setTextColor(orange[0], orange[1], orange[2]);
-    doc.setFont(undefined, "bold");
-    doc.text("TAX & HSN SUMMARY", 14, 35);
-
-    autoTable(doc, {
-      startY: 45,
-      head: [["HSN CODE", "SUBTOTAL", "QTY", "GST AMOUNT", "SHIPPING", "GRAND TOTAL"]],
-      body: [[
-        "902145678",
-        (order.grandTotal - order.gstAmount).toFixed(2),
-        order.items.length,
-        order.gstAmount.toFixed(2),
-        order.shippingCharge.toFixed(2),
-        `${order.grandTotal.toLocaleString()} INR`,
-      ]],
-      theme: "grid",
-      headStyles: { fillColor: orange, fontSize: 10 },
-      styles: { fontSize: 12, cellPadding: 3 },
-    });
-
-    autoTable(doc, {
-      startY: doc.lastAutoTable.finalY + 15,
-      margin: { left: 110 },
-      head: [["INVOICE SUMMARY", "AMOUNT"]],
-      body: [
-        ["Total Taxable Value", `${(order.grandTotal - order.gstAmount).toFixed(2)} INR`],
-        ["Total GST", `${order.gstAmount.toFixed(2)} INR`],
-        ["Grand Total", `${order.grandTotal?.toLocaleString()} INR`],
-      ],
-      theme: "grid",
-      headStyles: {
-        fillColor: orange,
-        textColor: [255, 255, 255],
-        fontSize: 11,
-      },
-      styles: { fontSize: 12, halign: "right", cellPadding: 4 },
-      columnStyles: { 0: { fontStyle: "bold", halign: "left" } },
-    });
-
-    doc.save(`Official_Invoice_${order.orderId}.pdf`);
   };
+
+  const drawFooter = () => {
+    doc.setFillColor(...BLACK);
+    doc.rect(0, PH - 13, 100, 13, "F");
+    doc.triangle(100, PH - 13, 100, PH, 116, PH, "F");
+
+    doc.setFillColor(...ORANGE);
+    doc.rect(158, PH - 7, PW - 158, 7, "F");
+    doc.triangle(158, PH - 7, 158, PH, 143, PH, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11.5);
+    doc.setTextColor(...BLACK);
+    doc.text("DIGIDENT INDIA PRIVATE LIMITED.", 14, PH - 26);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10.5);
+    doc.text("Regd : Digident India Pvt Ltd, 314, Sapna Sangeeta Rd, near Matlani Garden,", 14, PH - 20);
+    doc.text("Professor Colony, Indore, Madhya Pradesh 452001", 14, PH - 15);
+    doc.setTextColor(...WHITE);
+    doc.text("Email: info@digident.in  Contact No: +91 9294503001", 14, PH - 6);
+  };
+
+  // --- PAGE 1 START ---
+  drawHeader();
+
+  // 1. Invoice Meta (Top Left)
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Invoice Number: #${invoiceNo}`, 14, 45);
+  doc.text(`Invoice Date: ${invoiceDate}`, 14, 52);
+  doc.setFont("helvetica", "bold");
+  doc.text(`Due Date: ${dueDate}`, 14, 59);
+
+  // 2. Customer & Payment Info (Left Middle)
+  const midY = 72;
+  doc.setFontSize(11);
+  doc.text(`CUSTOMER NO : ${customerNo}`, 14, midY);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+  doc.text(`Payment Terms : ${payTerms}`, 14, midY + 7);
+  doc.setFont("helvetica", "bold");
+  doc.text("Our GSTIN : 23AAKCD9669F1ZA", 14, midY + 14);
+
+  // 3. Billing & Order Details (Fixed Columns & Gaps)
+  const leftColX = 14;
+  const rightColX = 120; // Increased for proper middle gap
+  let leftY = 95;
+  let rightY = 85;
+
+  // --- Left Side: Order identifiers ---
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12); // Matches design
+
+  // Split long order numbers to prevent overlapping the right column
+  const orderNoLines = doc.splitTextToSize(`Order Number : ${orderNo}`, 80); 
+  doc.text(orderNoLines, leftColX, leftY);
+
+  leftY += (orderNoLines.length * 6) + 2; 
+  doc.text(`Customer Service Rep : ${csr}`, leftColX, leftY);
+
+  // --- Right Side: BILL TO ---
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text("BILL TO", rightColX, rightY);
+
+  rightY += 6;
+  doc.text(addr.fullName || addr.name || "N/A", rightColX, rightY);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+
+  // Address block with proper leading
+  const addrParts = [addr.street || addr.line1, addr.line2].filter(Boolean).join(", ");
+  const addrLines = doc.splitTextToSize(addrParts, 85);
+  rightY += 6;
+  doc.text(addrLines, rightColX, rightY);
+
+  rightY += (addrLines.length * 5.5);
+  const cityState = [addr.city, addr.state, addr.pincode].filter(Boolean).join(", ");
+  doc.text(cityState, rightColX, rightY);
+
+  rightY += 6;
+  doc.setFont("helvetica", "bold");
+  doc.text(`GSTIN: ${gstNo}`, rightColX, rightY);
+
+  // Delivery Details Section (Added gap before this block)
+  rightY += 10; 
+  doc.setFont("helvetica", "normal");
+  doc.text(`Terms of Delivery : ${tod}`, rightColX, rightY);
+  doc.text(`Shipping Condition : ${shipCond}`, rightColX, rightY + 6);
+  doc.text(`Order Date : ${orderDate}`, rightColX, rightY + 12);
+  doc.text(`Delivery Date : ${deliveryDate}`, rightColX, rightY + 18);
+
+  // Update currentY for the table to start after the tallest column
+  let currentY = Math.max(leftY, rightY + 15);
+
+  // 4. Line Items Table
+  const tableStartY = Math.max(currentY + 10, 155);
+  const tableRows = order.items.map((item, i) => [
+    i + 1,
+    `${item.productName || ""}${item.variantName ? "\n" + item.variantName : ""}`,
+    item.quantity,
+    (item.price || 0).toFixed(2),
+    "0%\n0.00",
+    "0",
+    ((item.price || 0) * (item.quantity || 1)).toFixed(2),
+    `IGST${gstPct}%`,
+  ]);
+
+
+autoTable(doc, {
+  startY: tableStartY,
+  head: [[
+    { content: "ARTICLE NO", styles: { halign: "center" } },
+    { content: "DESCRIPTION", styles: { halign: "center" } },
+    { content: "QTY", styles: { halign: "center" } },
+    { content: "PRICE", styles: { halign: "center" } },
+    { content: "DISCOUNT\n(VALUE)", styles: { halign: "center" } },
+    { content: "DISCOUNT\nTOTAL", styles: { halign: "center" } },
+    { content: "TOTAL NET", styles: { halign: "center" } },
+    { content: "GST", styles: { halign: "center" } },
+  ]],
+  body: tableRows,
+  theme: "plain",
+  headStyles: { 
+    fillColor: [230, 135, 54], // ORANGE
+    textColor: [255, 255, 255], // WHITE
+    fontSize: 8.5, // Slightly smaller font helps stacking
+    fontStyle: "bold",
+    cellPadding: 1,
+    minCellHeight: 12, // Force header to be tall enough for 2 lines
+    valign: 'middle' // Centers the stacked text vertically
+  },
+  bodyStyles: { 
+    fontSize: 8.5, 
+    textColor: [0, 0, 0], // BLACK
+    cellPadding: { top: 6, bottom: 6, left: 3, right: 3 } 
+  },
+  columnStyles: {
+    0: { cellWidth: 16, halign: "center" },
+    1: { cellWidth: 50, halign: "center" },
+    2: { cellWidth: 15, halign: "center" },
+    3: { cellWidth: 20, halign: "center" },
+    4: { cellWidth: 24, halign: "center" }, // Widened for stacking
+    5: { cellWidth: 22, halign: "center" },
+    6: { cellWidth: 22, halign: "center" },
+    7: { cellWidth: 16, halign: "center" },
+  },
+  didDrawCell: (data) => {
+    if (data.section === 'body') {
+      doc.setDrawColor(230, 135, 54); 
+      doc.setLineWidth(0.4);
+      doc.line(
+        data.cell.x, 
+        data.cell.y + data.cell.height, 
+        data.cell.x + data.cell.width, 
+        data.cell.y + data.cell.height
+      );
+    }
+  },
+  margin: { left: 14, right: 14 },
+});
+
+
+
+  // Always draw the footer at the very bottom of the final page
+  drawFooter();
+  // --- PAGE 2 START ---
+  doc.addPage();
+  drawHeader();
+
+  doc.setFont("helvetica", "bold").setFontSize(20).setTextColor(...ORANGE);
+  doc.text("TAX & HSN SUMMARY", 14, 50);
+
+  autoTable(doc, {
+    startY: 75,
+    head: [["GST SUMMARY", "GOODS", "FREIGHT", "TOTAL"]],
+    body: [
+      ["Net Value", taxableVal.toFixed(2), freight.toFixed(2), (taxableVal + freight).toFixed(2)],
+      ["Total Tax", gstAmount.toFixed(2), "0.00", gstAmount.toFixed(2)],
+      ["Net incl. Tax", grandTotal.toFixed(2), freight.toFixed(2), grandTotal.toFixed(2)],
+    ],
+    theme: "grid",
+    headStyles: { fillColor: ORANGE, textColor: WHITE, fontSize: 9 },
+    columnStyles: { 0: { fontStyle: "bold" }, 1: { halign: "right" }, 2: { halign: "right" }, 3: { halign: "right", fontStyle: "bold" } },
+    margin: { left: 14, right: 14 },
+  });
+
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY + 10,
+    margin: { left: 108, right: 14 },
+    head: [["INVOICE SUMMARY", "AMOUNT"]],
+    body: [
+      ["Total Gross Value", `${taxableVal.toFixed(2)} INR`],
+      ["Freight Cost", `${freight.toFixed(2)} INR`],
+      ["Total Tax", `${gstAmount.toFixed(2)} INR`],
+      ["Total Pay Amount", `${grandTotal.toFixed(2)} INR`],
+      ["Paid Amount", `${paidAmount.toFixed(2)} INR`],
+      ["Amount to Pay", `${(grandTotal - paidAmount).toFixed(2)} INR`],
+    ],
+    theme: "grid",
+    headStyles: { fillColor: ORANGE, textColor: WHITE },
+    bodyStyles: { halign: "right" },
+    columnStyles: { 0: { halign: "left", fontStyle: "bold" } },
+  });
+
+  currentY = doc.lastAutoTable.finalY + 72;
+
+// 2. Draw Bank Details (Simple flat text)
+doc.setFont("helvetica", "bold").setFontSize(10.5).setTextColor(0);
+doc.text("Bank Details", 14, currentY);
+
+doc.setFont("helvetica", "normal").setFontSize(9.5);
+doc.text([
+  `Account No : 00840510002087`,
+  `Account Type : Current`,
+  `IFSC Code : UCBA0000084`,
+  `Holder Name : Digident India Private Limited`
+], 14, currentY + 6, { lineHeightFactor: 1.2 }); // Using an array for cleaner code
+  drawFooter();
+  doc.save(`Digident_Invoice_${order.orderId}.pdf`);
+};
 
   /* ================= CANCEL & REFUND LOGIC ================= */
   const handleCancelOrder = async () => {
@@ -385,10 +489,8 @@ const OrderDetailsPage = () => {
     try {
       setCancelLoading(true);
 
-      // Cancel the order
       await cancelOrder(order.orderId);
 
-      // Complete the refund
       const refundRes = await completeRefund(order.orderId);
 
       if (refundRes.success) {

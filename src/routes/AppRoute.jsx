@@ -1,12 +1,14 @@
 import React, { lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
+
 // --- Lazy Loads ---
 const Shop = lazy(() => import("../pages/Shop.jsx"));
 const HotSellingPage = lazy(() => import("../pages/HotSellingPage.jsx"));
 const HotSelling = lazy(() => import("../components/shopSection/HotSelling.jsx"));
 const AllProduct = lazy(() => import("../pages/AllProductPage.jsx"));
 const ProductPage = lazy(() => import("../pages/ProductPage.jsx"));
+const ReviewPage = lazy(() => import("../components/product-review/Review.jsx"));
 
 // Auth
 const Login = lazy(() => import("../components/auth/Login.jsx"));
@@ -61,6 +63,8 @@ const AppRoutes = ({ token }) => {
       <Route path="/hotselling" element={<HotSelling />} />
       <Route path="/all-products" element={<AllProduct />} />
       <Route path="/productpage/:productId" element={<ProductPage />} />
+      <Route path="/review/:productId" element={<ReviewPage />} />
+      <Route path="/review" element={<ReviewPage />} />
 
       {/* Auth Routes */}
       <Route path="/login" element={<PublicRoute token={token}><Login /></PublicRoute>} />
