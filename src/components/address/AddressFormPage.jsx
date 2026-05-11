@@ -145,29 +145,39 @@ export default function AddressFormPage({ initialData, onCancel, onSuccess }) {
           ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={loading}
-            className="w-full py-4 bg-gray-50 text-gray-400 rounded-2xl font-bold uppercase text-[10px] cursor-pointer hover:bg-gray-100 disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 bg-[#E68736] text-white rounded-2xl font-bold uppercase text-[10px] border border-[#E68736] hover:bg-white hover:text-[#E68736] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:bg-orange-300 disabled:border-orange-300"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="animate-spin" size={14} /> Saving...
-              </>
-            ) : (
-              'Save Address'
-            )}
-          </button>
-        </div>
+<div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
+  {/* Cancel Button - Kept subtle to contrast with the primary action */}
+  <button
+    type="button"
+    onClick={onCancel}
+    disabled={loading}
+    className="w-full py-4 bg-gray-50 text-gray-400 rounded-2xl font-bold uppercase text-[10px] cursor-pointer hover:bg-gray-100 disabled:opacity-50 transition-colors"
+  >
+    Cancel
+  </button>
+
+  {/* Save Address Button */}
+  <button
+    type="submit"
+    disabled={loading}
+    className="w-full py-4 text-white rounded-2xl font-bold uppercase text-[10px] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]"
+    style={{ 
+      background: loading 
+        ? '#9CA3AF' 
+        : 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)',
+      border: 'none',
+      cursor: loading ? "not-allowed" : "pointer"
+    }}
+  >
+    {loading ? (
+      <>
+        <Loader2 className="animate-spin" size={14} /> Saving...
+      </>
+    ) : (
+      'Save Address'
+    )}
+  </button>
+</div>
       </form>
     </div>
   );

@@ -79,7 +79,8 @@ const RelatedProducts = ({ brandId, currentProductId }) => {
             {related.length < 3 ? "Related Product" : "Related Products"}
           </h3>
         </div>
-        <Link to="/all-products" className="text-sm font-bold text-orange-500 hover:underline">
+        <Link to="/all-products" className="text-sm font-bold text-orange-500 hover:underline"
+        >
           View All
         </Link>
       </div>

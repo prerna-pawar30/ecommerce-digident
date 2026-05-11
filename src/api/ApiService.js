@@ -72,11 +72,11 @@ export const clearAddresses = () => safeRequest(apiClient.delete(API_ROUTES.ADDR
 export const createOrder = (data) => safeRequest(apiClient.post(API_ROUTES.ORDERS.CREATE, data));
 export const verifyPayment = (data) => safeRequest(apiClient.post(API_ROUTES.ORDERS.VERIFY_RAZORPAY, data));
 // Change this in your ApiService.js
-export const fetchMyOrders = (month, year, page = 1) => {
+export const fetchMyOrders = (month, year) => {
   const query = new URLSearchParams();
   if (month) query.append("month", month);
   if (year) query.append("year", year);
-    query.append("page", page);
+
 
   const url = `${API_ROUTES.ORDERS.MY_ORDERS}?${query.toString()}`;
   return safeRequest(apiClient.get(url));
@@ -125,3 +125,15 @@ export const updateProductReview = (id, data) =>
  */
 export const deleteProductReview = (id) => 
   safeRequest(apiClient.delete(API_ROUTES.PRODUCTREVIEWS.DELETE(id)));
+
+// INVOICE SERVICES
+export const createOrderInvoice = (data) => 
+  apiClient.post(`${API_ROUTES.INVOICE.CREATE}`, data);
+export const updateInvoice = async (invoiceId, data) => {
+  const response = await apiClient.put(`/api/v1/invoice/update/${invoiceId}`, data);
+  return response.data;
+};
+// Using invoiceId (UUID) instead of _id
+export const getInvoice = (invoiceId) => safeRequest(apiClient.get(API_ROUTES.INVOICE.GET(invoiceId)));
+
+export const deleteInvoice = (invoiceId) => safeRequest(apiClient.delete(API_ROUTES.INVOICE.DELETE(invoiceId)));

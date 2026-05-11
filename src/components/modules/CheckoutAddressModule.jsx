@@ -83,7 +83,7 @@ export default function CheckoutAddressModule() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center font-bold text-[#E68736] animate-pulse uppercase tracking-widest text-xs">
+      <div className="py-90 text-center font-bold text-[#E68736] animate-pulse uppercase tracking-widest text-xs">
         Loading Digident Addresses...
       </div>
     );
@@ -182,14 +182,18 @@ export default function CheckoutAddressModule() {
             </div>
 
             <div className="lg:col-span-1 order-1 lg:order-2">
-              <div className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 lg:sticky lg:top-24 shadow-sm">
+              <div className="bg-white border border-orange-200 rounded-2xl p-5 sm:p-6 lg:sticky lg:top-24 shadow-sm">
                 <h3 className="font-bold text-gray-400 mb-4 uppercase text-[10px] tracking-widest">
                   Order Summary
                 </h3>
                 <button
                   onClick={handleFinalCheckout}
                   disabled={!selectedAddressId}
-                  className="w-full bg-[#E68736] text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:shadow-lg disabled:bg-gray-200 transition-all cursor-pointer border border-[#E68736] hover:bg-white hover:text-[#E68736]"
+                  className="w-full text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:shadow-lg disabled:bg-gray-200 transition-all cursor-pointer  hover:bg-white hover:text-white"
+                       style={{ 
+                        cursor: "pointer", 
+                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                      }}
                 >
                   Deliver to this address
                 </button>

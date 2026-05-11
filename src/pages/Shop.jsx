@@ -4,7 +4,7 @@ import {
   fetchCategories,
   fetchAllBrands,
   fetchBestSellingProducts,
-  fetchBannersByStatus, // Updated import
+  fetchBannersByStatus, 
   fetchActiveProducts
 } from "../api/ApiService";
 
@@ -105,13 +105,7 @@ function Shop() {
         loading={loading}
       />
 
-      <Brand
-        brands={data.brands}
-        loading={loading}
-        onBrandClick={(brandId) =>
-          handleFilterNavigation({ brand: brandId })
-        }
-      />
+
 
       <Categories
         categories={data.categories}
@@ -123,6 +117,14 @@ function Shop() {
         }
       />
 
+      <Brand
+        brands={data.brands}
+        loading={loading}
+        onBrandClick={(brandId) =>
+          handleFilterNavigation({ brand: brandId })
+        }
+      />
+      
       <HotSelling
         products={data.hotSelling}
         loading={loading}

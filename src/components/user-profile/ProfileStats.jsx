@@ -21,7 +21,11 @@ const ProfileStats = ({ ordersCount, cartItemsCount, addressesCount, onCartClick
     {/* Shopping Cart Action Button */}
     <button 
       onClick={onCartClick}
-      className="w-full bg-slate-900 text-white p-4 md:p-6 rounded-[2rem] flex items-center justify-between group hover:bg-[#e67e22] transition-all shadow-lg active:scale-[0.98]"
+      className="w-full text-white p-4 md:p-6 rounded-[2rem] flex items-center justify-between group  transition-all shadow-lg active:scale-[0.98]"
+       style={{ 
+                        cursor: "pointer", 
+                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                      }}
     >
       <div className="flex items-center gap-3 md:gap-4">
         <div className="p-2.5 md:p-3 bg-white/10 rounded-xl md:rounded-2xl">

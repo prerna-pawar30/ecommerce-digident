@@ -68,6 +68,13 @@ COUPONS: {
     REFUND_COMPLETE: (id) => `${VERSION}/order/refund/complete/${id}`,
   },
 
+    INVOICE: {
+        CREATE: `${VERSION}/invoice/create`,
+        GET: (id) => `${VERSION}/invoice/get/${id}`,
+        UPDATE: (id) => `${VERSION}/invoice/update/${id}`,
+        DELETE: (id) => `${VERSION}/invoice/delete/${id}`,
+    },
+
   PRODUCTREVIEWS: {
     ADD: `${VERSION}/product-review/create`,
     GET_ALL: (id) => `${VERSION}/product-review/all/${id}`,

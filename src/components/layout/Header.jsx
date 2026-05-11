@@ -99,8 +99,9 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all shadow-md bg-[#F7E6DC] 
+        className={`fixed top-0 left-0 w-full z-50 transition-all shadow-md 
         ${isDesktop ? "h-[85px] flex items-center justify-between px-8" : "pt-3 pb-2 px-4"}`}
+          style={{ background: 'linear-gradient(160deg, #F7E6DC 0%, #E68736 100%)' }}
       >
         {/* TOP ROW: Logo & Actions */}
         <div className={`flex items-center justify-between w-full ${isDesktop ? "contents" : "mb-3"}`}>
@@ -137,12 +138,12 @@ export default function Header() {
             {isDesktop && isAuthenticated && (
               <button
                 onClick={() => navigate("/cart")}
-                className="relative flex items-center gap-2 bg-[#E68736] text-white px-5 py-2.5 cursor-pointer rounded-xl font-bold hover:brightness-110 transition-all"
+                className="relative flex items-center gap-2 bg-white text-[#E68736] px-5 py-2.5 cursor-pointer rounded-xl font-bold hover:brightness-110 transition-all"
               >
                 <HiShoppingCart />
                 Cart
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-white text-[#E68736] w-6 h-6 rounded-full text-xs flex items-center justify-center font-black shadow-sm">
+                  <span className="absolute -top-2 -right-2 bg-white text-[#E68736] border border-[#E68736] w-6 h-6 rounded-full text-xs flex items-center justify-center font-black shadow-sm">
                     {cartCount}
                   </span>
                 )}
@@ -240,9 +241,9 @@ export default function Header() {
             ) : (
               /* Mobile Burger Menu Icon */
               <button onClick={() => setDrawerOpen(true)} className="flex flex-col gap-1.5 p-2">
-                <span className="w-6 h-0.5 bg-[#E68736] rounded-full" />
-                <span className="w-6 h-0.5 bg-[#E68736] rounded-full" />
-                <span className="w-4 h-0.5 bg-[#E68736] rounded-full self-end" />
+                <span className="w-6 h-0.5 bg-white rounded-full" />
+                <span className="w-6 h-0.5 bg-white rounded-full" />
+                <span className="w-4 h-0.5 bg-white rounded-full self-end" />
               </button>
             )}
           </div>

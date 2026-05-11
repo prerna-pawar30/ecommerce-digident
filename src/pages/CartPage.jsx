@@ -12,7 +12,7 @@ import {
 
 import { confirmAction } from "../utils/alerts";
 import DynamicProgressStepper from "../components/ui/steps";
-import RelatedProduct from "../components/shopSection/RelatedProduct";
+import RelatedProducts from "../components/shopSection/RelatedProduct";
 import HotSelling from "../components/shopSection/HotSelling";
 
 import CartItem from "../components/cart/CartItem";
@@ -137,7 +137,10 @@ export default function CartPage() {
 
       {/* Footer sections (Related/Hot Selling) */}
       <div className="mt-12">
-        <RelatedProduct />
+         <RelatedProducts 
+            brandId={null} 
+            currentProductId="general-shop" 
+          />
       </div>
 
       <div className="mt-8">

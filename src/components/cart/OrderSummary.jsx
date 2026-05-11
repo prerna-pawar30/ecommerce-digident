@@ -95,14 +95,22 @@ export default function OrderSummary({ items, subtotal, totalQuantity }) {
                   },
                 })
               }
-              className="w-full bg-[#E68736] text-white py-3 sm:py-4 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-[#cf7529] transition-all cursor-pointer shadow-md shadow-orange-100 text-sm sm:text-base"
+              className="w-full  text-white py-3 sm:py-4 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-[#cf7529] transition-all cursor-pointer shadow-md shadow-orange-100 text-sm sm:text-base"
+              style={{ 
+                        cursor: "pointer", 
+                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                      }}
             >
               Proceed to Checkout <HiArrowRight />
             </button>
 
             <button
               onClick={() => navigate("/all-products")}
-              className="w-full bg-white text-[#E68736] py-2 sm:py-3 font-bold rounded-xl border-2 border-[#E68736] flex items-center justify-center gap-2 hover:bg-orange-50 transition-all cursor-pointer text-sm sm:text-base"
+              className="w-full  text-white py-2 sm:py-3 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-orange-50 transition-all cursor-pointer text-sm sm:text-base"
+              style={{ 
+                        cursor: "pointer", 
+                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                      }}
             >
               Continue Shopping
             </button>

@@ -30,7 +30,7 @@ const OrderCard = ({ order, onClick }) => {
           <div>
             <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Order ID</p>
             <p className="text-sm font-semibold text-gray-700 flex items-center gap-1">
-              <Hash size={14} className="text-gray-400" /> {order.orderId}
+              <Hash size={14} className="text-gray-400" /> {order.iId}
             </p>
           </div>
         </div>

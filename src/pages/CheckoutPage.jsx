@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback , useRef} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
@@ -7,7 +7,7 @@ import confetti from "canvas-confetti";
 import { ChevronLeft, ShoppingBag, Edit2 } from "lucide-react";
 
 // API Services
-import { createOrder, verifyPayment, fetchActiveCoupons } from "../api/ApiService";
+import { createOrder, verifyPayment, fetchActiveCoupons, createOrderInvoice } from "../api/ApiService";
 import { resetCart } from "../store/slices/CartSlice";
 
 // Component Imports
@@ -21,7 +21,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-
+  const isCreatingInvoice = useRef(false);
   const [loading, setLoading] = useState(false);
   const [sameAsDelivery, setSameAsDelivery] = useState(false);
   const [availableCoupons, setAvailableCoupons] = useState([]);
@@ -135,17 +135,23 @@ const CheckoutPage = () => {
     Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: `Applied: ${coupon.code}`, showConfirmButton: false, timer: 2000 });
   };
 
-  const handlePlaceOrder = useCallback(async ({ gstAmount, gstPercentage }) => {
+const handlePlaceOrder = useCallback(async ({ gstAmount, gstPercentage }) => {
     if (!deliveryAddress) return Swal.fire("Required", "Select shipping address", "warning");
     if (!billingAddress.fullName || !billingAddress.phone) return Swal.fire("Required", "Complete Billing Details", "warning");
 
     setLoading(true);
     const isScriptLoaded = await loadRazorpayScript();
-    if (!isScriptLoaded) { setLoading(false); return Swal.fire("Error", "Razorpay SDK failed", "error"); }
+    if (!isScriptLoaded) {
+      setLoading(false);
+      return Swal.fire("Error", "Razorpay SDK failed", "error");
+    }
 
     try {
+      const { organizationName, gstNumber, ...restOfBilling } = billingAddress;
       const payload = {
         addressId: deliveryAddress.addressId,
+        organizationName: organizationName || null, 
+        gstNumber: gstNumber || null,
         billingAddress: { ...billingAddress, country: "India" },
         gstAmount,
         gstPercentage,
@@ -162,16 +168,77 @@ const CheckoutPage = () => {
       const response = await createOrder(payload);
       if (response.success) {
         const { razorpayOrderId, amount, currency, orderItem } = response.data;
+        
         const options = {
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-          amount, currency, name: "Digident", order_id: razorpayOrderId,
+          amount,
+          currency,
+          name: "Digident",
+          order_id: razorpayOrderId,
           handler: async (paymentResponse) => {
-            const verifyRes = await verifyPayment({ ...paymentResponse, orderItem });
-            if (verifyRes.success) {
-              confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-              await Swal.fire("Success", "Order Placed Successfully", "success");
-              dispatch(resetCart());
-              navigate(`/order/${verifyRes.data.order.orderId}`);
+            // Check lock immediately inside handler
+            if (isCreatingInvoice.current) return;
+
+            try {
+              const verifyRes = await verifyPayment({ ...paymentResponse, orderItem });
+              
+              if (verifyRes.success && !isCreatingInvoice.current) {
+                // LOCK ENGAGED
+                isCreatingInvoice.current = true; 
+
+                const currentOrder = verifyRes.data.order;
+
+                try {
+                  const invoicePayload = {
+                    orderId: currentOrder.orderId, // CRITICAL: Link to orderId for backend validation
+                    paymentTerms: "Payable due amount in 10 days",
+                    termsOfDelivery: `CIP ${currentOrder.shippingAddress?.state || "India"}`,
+                    shippingCondition: "Normal",
+                    customerServiceRep: "Vithalsir (MD)",
+                    billTo: {
+                      companyName: response.data.orderItem.organizationName || billingAddress.fullName, 
+                      address: `${billingAddress.street}, ${billingAddress.area}, ${billingAddress.city}, ${billingAddress.state} ${billingAddress.pincode}`,
+                      gstin: billingAddress.gstNumber || "",
+                      contactPerson: billingAddress.fullName || "",
+                      contactNumber: billingAddress.phone || ""
+                    },
+                    items: cartItems.map(item => ({
+                      description: item.name || item.product?.name,
+                      qty: item.quantity,
+                      price: item.price,
+                      gstType: "IGST",
+                      gstPercent: 5
+                    })),
+                    summary: {
+                      freightCost: currentOrder.shippingCharge || 0,
+                      paidAmount: orderFinancials.total
+                    },
+                    status: "issued",
+                    dueDate: new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000).toISOString()
+                  };
+
+                  const invResponse = await createOrderInvoice(invoicePayload);
+                } catch (invErr) {
+                  console.error("Invoice generation skipped or failed:", invErr);
+                  // Reset lock if it was a network error so a manual sync could work later
+                  isCreatingInvoice.current = false; 
+                }
+
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                await Swal.fire({
+                  title: "Order Placed!",
+                  text: "Your order is confirmed and invoice generated.",
+                  icon: "success",
+                  confirmButtonColor: "#E68736"
+                });
+
+                dispatch(resetCart());
+                navigate(`/order/${currentOrder.orderId}`);
+              }
+            } catch (err) {
+              isCreatingInvoice.current = false; // Reset lock on verification failure
+              console.error("Verification Error:", err);
+              Swal.fire("Payment Error", "Verification failed. Please contact support.", "error");
             }
           },
           theme: { color: "#E68736" },
@@ -184,7 +251,7 @@ const CheckoutPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [deliveryAddress, billingAddress, cartItems, selectedCoupon, orderFinancials.discountAmount, dispatch, navigate]);
+  }, [deliveryAddress, billingAddress, cartItems, selectedCoupon, orderFinancials, dispatch, navigate]);
 
   return (
     <div className="py-10 md:py-16 min-h-screen bg-gray-50/30 font-sans">

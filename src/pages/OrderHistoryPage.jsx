@@ -7,12 +7,12 @@ import Breadcrumb from "../components/ui/Breadcrumb";
 
 import OrderFilterBar from "../components/my-order/OrderFilterBar";
 import OrderCard from "../components/my-order/OrderCard";
-import OrderPagination from "../components/my-order/OrderPagination";
+// import OrderPagination from "../components/my-order/OrderPagination";
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
+  // const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
@@ -30,10 +30,10 @@ const OrderHistory = () => {
       const orderData = response.data || {}; 
 
       setOrders(orderData.orders || []);
-      setPagination({ 
-        currentPage: orderData.currentPage || 1, 
-        totalPages: orderData.totalPages || 1 
-      });
+      // setPagination({ 
+      //   currentPage: orderData.currentPage || 1, 
+      //   totalPages: orderData.totalPages || 1 
+      // });
     } catch (err) {
       console.error("Order Page Error:", err);
     } finally {
@@ -86,12 +86,12 @@ const OrderHistory = () => {
               />
             ))}
 
-            <OrderPagination 
+            {/* <OrderPagination 
               currentPage={pagination.currentPage}
               totalPages={pagination.totalPages}
               onPageChange={(newPage) => getOrders(newPage)} // 🔥 Change fetchMyOrders to getOrders
               loading={loading}
-            />
+            /> */}
           </div>
         )}
       </div>

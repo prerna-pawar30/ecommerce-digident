@@ -57,8 +57,12 @@ const ProfileHeader = ({ user, onEditClick }) => {
 
             <button 
               onClick={() => navigate("/")}
-              className="bg-[#E68736] text-white p-2.5 md:px-6 md:py-2.5 rounded-xl font-bold shadow-md hover:bg-black transition-all active:scale-95 flex items-center gap-2"
+              className=" text-white p-2.5 md:px-6 md:py-2.5 rounded-xl font-bold shadow-md  transition-all active:scale-95 flex items-center gap-2"
               title="Go to Home"
+               style={{ 
+                        cursor: "pointer", 
+                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                      }}
             >
               <HiHome size={20} />
               <span className="hidden md:block">Home</span>

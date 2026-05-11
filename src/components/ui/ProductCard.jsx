@@ -58,7 +58,11 @@ export default function ProductCard({ product, isLast, lastItemRef }) {
           
           <Link
             to={`/productpage/${pId}`}
-            className="px-3 md:px-4 py-1.5 md:py-2 text-[11px] md:text-sm font-bold rounded-lg bg-[#E68736] text-white hover:bg-white hover:text-[#E68736] border border-[#E68736] transition-all"
+            className="px-3 md:px-4 py-1.5 md:py-2 text-[11px] md:text-sm font-bold rounded-lg  text-white  transition-all"
+              style={{ 
+                        cursor: "pointer", 
+                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                      }}
           >
             View
           </Link>

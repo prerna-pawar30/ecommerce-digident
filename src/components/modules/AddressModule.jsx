@@ -80,7 +80,11 @@ export default function AddressModule() {
           {view === 'list' && (
             <button
               onClick={() => { setEditingAddress(null); setView('form'); }}
-              className="flex items-center justify-center gap-2 bg-[#E68736] hover:bg-[#cf752d] text-white px-6 py-3.5 rounded-2xl font-bold transition-all shadow-lg shadow-orange-200 active:scale-95"
+              className="flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl font-bold transition-all shadow-lg shadow-orange-200 active:scale-95"
+              style={{ 
+                cursor: "pointer", 
+                background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+              }}
             >
               <HiPlus size={20} />
               <span className="text-sm uppercase tracking-wide">Add New</span>

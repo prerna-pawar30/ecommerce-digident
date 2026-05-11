@@ -184,38 +184,60 @@ const UserProfile = () => {
               </div>
             </div>
 
-            {/* Orders */}
-            <div className="bg-white rounded-[2rem] border border-orange-100 shadow-sm overflow-hidden">
-              <SectionHeader title="Recent Orders" btnText="View All" onBtnClick={() => navigate('/order-history')} />
-              <div className="divide-y divide-gray-50">
+            {/* Orders Section */}
+            <div className="bg-white rounded-[2rem] border border-orange-100 shadow-sm overflow-hidden transition-all duration-300">
+              <SectionHeader 
+                title="Recent Orders" 
+                btnText="View All" 
+                onBtnClick={() => navigate('/order-history')} 
+              />
+
+              <div className="divide-y divide-slate-50">
                 {orders?.length > 0 ? (
                   orders.slice(0, 5).map((orderWrapper) => {
-                    /* FIX 2: Handle nested orderId object from your JSON */
                     const orderDetail = orderWrapper.orderId;
                     
-                    // Safety check if orderDetail is missing
                     if (!orderDetail) return null;
+
+                    // Dynamic status styling logic
+                    const getStatusStyles = (status) => {
+                      const s = status?.toLowerCase();
+                      if (s === 'delivered' || s === 'completed') 
+                        return 'bg-emerald-50 text-emerald-600 border-emerald-100';
+                      if (s === 'cancelled' || s === 'failed') 
+                        return 'bg-rose-50 text-rose-600 border-rose-100';
+                      return 'bg-orange-50 text-orange-600 border-orange-100'; // Default/Pending
+                    };
 
                     return (
                       <div 
                         key={orderDetail._id} 
-                        className="p-6 flex items-center justify-between hover:bg-orange-50/30 transition-colors cursor-pointer group" 
+                        className="p-5 flex items-center justify-between hover:bg-slate-50/50 transition-all cursor-pointer group" 
                         onClick={() => navigate(`/order/${orderDetail.orderId}`)}
                       >
+                        {/* Left: Icon and ID/Date */}
                         <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 bg-orange-100/50 rounded-xl flex items-center justify-center text-[#e67e22] group-hover:scale-110 transition-transform">
-                            <HiOutlineShoppingBag size={22} />
+                          <div className="h-11 w-11 bg-orange-50 rounded-2xl flex items-center justify-center text-[#e67e22] group-hover:scale-105 group-hover:bg-orange-100 transition-all duration-200 shadow-sm">
+                            <HiOutlineShoppingBag size={20} />
                           </div>
                           <div>
-                            <p className="text-sm font-black text-slate-800">{orderDetail.orderId}</p>
-                            <p className="text-xs text-gray-400 font-bold">
-                              {orderDetail.createdAt ? new Date(orderDetail.createdAt).toDateString() : "Date N/A"}
-                            </p>
-                          </div>
+              <p className="text-sm font-bold text-slate-800 tracking-tight line-clamp-1">
+                {orderDetail.items?.[0]?.productName || "Unknown Product"} campatible {orderDetail.items?.[0]?.categoryName}
+                {orderDetail.items?.length > 1 && (
+                  <span className="text-orange-500 font-medium ml-1">
+                    +{orderDetail.items.length - 1} more
+                  </span>
+                )}
+              </p>
+            </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm font-black text-slate-800">₹{orderDetail.grandTotal}</p>
-                          <span className="text-[10px] font-black uppercase px-2 py-1 rounded-lg bg-orange-50 text-orange-600 border border-orange-100">
+
+                        {/* Right: Price and Status */}
+                        <div className="flex flex-col items-end gap-1.5">
+                          <p className="text-sm font-extrabold text-slate-900">
+                            ₹{orderDetail.grandTotal?.toLocaleString('en-IN')}
+                          </p>
+                          <span className={`text-[9px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${getStatusStyles(orderDetail.orderStatus)}`}>
                             {orderDetail.orderStatus}
                           </span>
                         </div>
@@ -223,7 +245,12 @@ const UserProfile = () => {
                     );
                   })
                 ) : (
-                  <p className="text-center text-gray-400 py-10">No order history available</p>
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="bg-slate-50 p-4 rounded-full mb-2">
+                      <HiOutlineShoppingBag size={30} className="text-slate-300" />
+                    </div>
+                    <p className="text-sm font-medium text-slate-400">No order history available</p>
+                  </div>
                 )}
               </div>
             </div>

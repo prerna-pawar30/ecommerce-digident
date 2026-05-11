@@ -128,31 +128,42 @@ const ProductDetails = ({ productData }) => {
 
           <div className="flex flex-col md:flex-row items-center gap-4 mt-auto pt-4">
             <QuantitySelector quantity={quantity} setQuantity={setQuantity} maxStock={currentStock} />
+            
             <div className="flex flex-1 gap-3 w-full">
               {/* Add to Cart Button */}
               <button
                 type="button"
                 onClick={() => handleAddToCart(false)}
-                // Only disable this button if it is actually loading OR if stock is out
-                disabled={!isAvailable || loadingType === "cart"} 
-                className={`flex-1 font-bold py-4 md:py-3 rounded-lg transition-all
+                disabled={!isAvailable || loadingType === "cart"}
+                className={`flex-1 font-bold py-4 md:py-3 rounded-lg transition-all text-white
                 ${!isAvailable || loadingType === "cart" 
-                  ? "bg-gray-400 text-white cursor-not-allowed" 
-                  : "bg-[#E68736] text-white cursor-pointer hover:bg-[#cf7529]"}`}
+                  ? "bg-gray-400 cursor-not-allowed" 
+                  : "cursor-pointer hover:brightness-110"}`}
+                style={{
+                  cursor: !isAvailable || loadingType === "cart" ? "not-allowed" : "pointer",
+                  background: !isAvailable || loadingType === "cart" 
+                    ? "" // Let Tailwind's bg-gray-400 take over
+                    : "linear-gradient(160deg, #f8c1a1, #eb730b 100%)",
+                }}
               >
                 {loadingType === "cart" ? "Adding..." : "Add to Cart"}
               </button>
 
               {/* Buy Now Button */}
-              <button 
+              <button
                 type="button"
-                onClick={() => handleAddToCart(true)} 
-                // Only disable this button if it is actually loading OR if stock is out
-                disabled={!isAvailable || loadingType === "buyNow"} 
-                className={`flex-1 font-bold py-4 md:py-3 rounded-lg flex cursor-pointer items-center justify-center gap-1 text-[18px] md:text-sm transition-all 
+                onClick={() => handleAddToCart(true)}
+                disabled={!isAvailable || loadingType === "buyNow"}
+                className={`flex-1 font-bold py-4 md:py-3 rounded-lg flex items-center justify-center gap-1 text-[18px] md:text-sm transition-all text-white
                 ${!isAvailable || loadingType === "buyNow" 
-                  ? 'bg-gray-400 text-white cursor-not-allowed' 
-                  : 'bg-[#E68736] text-white hover:bg-[#cf7529]'}`}
+                  ? "bg-gray-400 cursor-not-allowed" 
+                  : "cursor-pointer hover:brightness-110"}`}
+                style={{
+                  cursor: !isAvailable || loadingType === "buyNow" ? "not-allowed" : "pointer",
+                  background: !isAvailable || loadingType === "buyNow" 
+                    ? "" 
+                    : "linear-gradient(160deg, #f8c1a1, #eb730b 100%)",
+                }}
               >
                 {loadingType === "buyNow" ? "Redirecting..." : "Buy Now"}
               </button>

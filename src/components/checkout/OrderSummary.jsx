@@ -38,17 +38,26 @@ const OrderSummary = ({ financials, loading, onPlaceOrder, onRemoveCoupon }) => 
       <button
         disabled={loading}
         onClick={() => onPlaceOrder({ gstAmount: gstAmount.toFixed(2), gstPercentage: 5 })}
-        className="w-full bg-[#E68736] text-white py-5 rounded-2xl font-black text-lg mt-8 flex items-center justify-center gap-3 hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-orange-100 disabled:opacity-50 cursor-pointer"
+        className={`w-full text-white py-5 rounded-2xl font-black text-lg mt-8 flex items-center justify-center gap-3 transition-all shadow-lg 
+          ${loading 
+            ? "bg-gray-400 opacity-50 cursor-not-allowed" 
+            : "hover:brightness-110 active:scale-95 shadow-orange-100"}`}
+        style={{ 
+          cursor: loading ? "not-allowed" : "pointer", 
+          background: loading 
+            ? "" // Falls back to gray background when loading
+            : 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+        }}
       >
-        {loading ? (
-          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-        ) : (
-          <>
-            <ShieldCheck size={24} /> 
-            Pay Now
-          </>
-        )}
-      </button>
+  {loading ? (
+    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+  ) : (
+    <>
+      <ShieldCheck size={24} /> 
+      Pay Now
+    </>
+  )}
+</button>
 
       {/* REPLACED SECTION: Clean Icons instead of external images */}
       <div className="mt-6 flex flex-col items-center gap-4">

@@ -23,3 +23,19 @@ body {
   /* padding-bottom: 1.5rem; */
   flex: 1 0 auto;
 }
+
+/* Custom class for SweetAlert buttons */
+.swal-gradient-button {
+  background: linear-gradient(160deg, #f8c1a1, #eb730b 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 700 !important;
+  padding: 10px 30px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Optional: Ensure accents inside the HTML also match */
+.accent-gradient {
+  accent-color: #eb730b;
+}
