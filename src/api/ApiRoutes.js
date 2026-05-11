@@ -1,84 +1,85 @@
+const BASE_URL = "https://digident-backend1.onrender.com"; // Change this to your actual API base URL
 const VERSION = "/api/v1";
 
 export const API_ROUTES = {
 
  AUTH: {
-    LOGIN: `${VERSION}/user/login`,
-    REGISTER: `${VERSION}/user/register`,
-    REFRESH_TOKEN: `${VERSION}/user/refresh-token`,
-    FORGOT_PASSWORD: `${VERSION}/user/forget-password`,
+    LOGIN: `${BASE_URL}${VERSION}/user/login`,
+    REGISTER: `${BASE_URL}${VERSION}/user/register`,
+    REFRESH_TOKEN: `${BASE_URL}${VERSION}/user/refresh-token`,
+    FORGOT_PASSWORD: `${BASE_URL}${VERSION}/user/forget-password`,
     // Dynamic endpoints for tokens
-    RESET_PASSWORD: (token) => `${VERSION}/user/reset-password/${token}`,
-    VERIFY_EMAIL: (token) => `${VERSION}/user/verify-email/${token}`,
+    RESET_PASSWORD: (token) => `${BASE_URL}${VERSION}/user/reset-password/${token}`,
+    VERIFY_EMAIL: (token) => `${BASE_URL}${VERSION}/user/verify-email/${token}`,
   },
 
   USER: {
-    ME: `${VERSION}/user/me`,
-    UPDATE_PROFILE: `${VERSION}/user/profile-update`,
-    DASHBOARD_STATS: `${VERSION}/user/dashboard`,
+    ME: `${BASE_URL}${VERSION}/user/me`,
+    UPDATE_PROFILE: `${BASE_URL}${VERSION}/user/profile-update`,
+    DASHBOARD_STATS: `${BASE_URL}${VERSION}/user/dashboard`,
   },
 
   BRANDS: {
-    ALL: `${VERSION}/brand/all?limit=100`,
+    ALL: `${BASE_URL}${VERSION}/brand/all?limit=100`,
   },
 
   CATEGORIES: {
-    GET: `${VERSION}/category/get`,
+    GET: `${BASE_URL}${VERSION}/category/get`,
   },
 
   BANNERS: {
-    STATUS: (isActive) => `${VERSION}/banner/status?isActive=${isActive}`,
-    PRODUCTS: (id) => `${VERSION}/banner/products/${id}`,
+    STATUS: (isActive) => `${BASE_URL}${VERSION}/banner/status?isActive=${isActive}`,
+    PRODUCTS: (id) => `${BASE_URL}${VERSION}/banner/products/${id}`,
   },
 
   PRODUCTS: {
-    BEST_SELLING: `${VERSION}/product/best-selling`,
-    ACTIVE: `${VERSION}/product/get/status/active`,
-    GET_BY_ID: (id) => `${VERSION}/product/getById/${id}`,
+    BEST_SELLING: `${BASE_URL}${VERSION}/product/best-selling`,
+    ACTIVE: `${BASE_URL}${VERSION}/product/get/status/active`,
+    GET_BY_ID: (id) => `${BASE_URL}${VERSION}/product/getById/${id}`,
   },
 
   RATINGS: {
-    ADD: (id) => `${VERSION}/rating/add/${id}`,
-    ALL: (id) => `${VERSION}/rating/all/${id}`,
+    ADD: (id) => `${BASE_URL}${VERSION}/rating/add/${id}`,
+    ALL: (id) => `${BASE_URL}${VERSION}/rating/all/${id}`,
   },
 
   ADDRESS: {
-    ADD: `${VERSION}/user/address/add`,
-    GET_ALL: `${VERSION}/user/address/get-all`,
-    UPDATE: (id) => `${VERSION}/user/address/update/${id}`,
-    DELETE: (id) => `${VERSION}/user/address/delete/${id}`,
-    CLEAR: `${VERSION}/user/address/clear`,
+    ADD: `${BASE_URL}${VERSION}/user/address/add`,
+    GET_ALL: `${BASE_URL}${VERSION}/user/address/get-all`,
+    UPDATE: (id) => `${BASE_URL}${VERSION}/user/address/update/${id}`,
+    DELETE: (id) => `${BASE_URL}${VERSION}/user/address/delete/${id}`,
+    CLEAR: `${BASE_URL}${VERSION}/user/address/clear`,
   },
 
  // API_ROUTES definition
 COUPONS: {
-    GET: (id) => `${VERSION}/coupons/get/${id}`,
+    GET: (id) => `${BASE_URL}${VERSION}/coupons/get/${id}`,
     // Change this to a function to accept the filter parameter
-    FILTER: (status) => `${VERSION}/coupons/filter/${status}`, 
+    FILTER: (status) => `${BASE_URL}${VERSION}/coupons/filter/${status}`, 
 },
 
   ORDERS: {
-    CREATE: `${VERSION}/order/create`,
-    VERIFY_RAZORPAY: `${VERSION}/order/verifyRazorpay`,
-    MY_ORDERS: `${VERSION}/order/my-orders`,
-    GET_BY_ID: (id) => `${VERSION}/order/get/${id}`,
-    CANCEL: (id) => `${VERSION}/order/cancel/${id}`,
-    RETURN: `${VERSION}/order/return`,
-    UPDATE_RETURN: (oId, rId) => `${VERSION}/order/return/update/${oId}/${rId}`,
-    REFUND_COMPLETE: (id) => `${VERSION}/order/refund/complete/${id}`,
+    CREATE: `${BASE_URL}${VERSION}/order/create`,
+    VERIFY_RAZORPAY: `${BASE_URL}${VERSION}/order/verifyRazorpay`,
+    MY_ORDERS: `${BASE_URL}${VERSION}/order/my-orders`,
+    GET_BY_ID: (id) => `${BASE_URL}${VERSION}/order/get/${id}`,
+    CANCEL: (id) => `${BASE_URL}${VERSION}/order/cancel/${id}`,
+    RETURN: `${BASE_URL}${VERSION}/order/return`,
+    UPDATE_RETURN: (oId, rId) => `${BASE_URL}${VERSION}/order/return/update/${oId}/${rId}`,
+    REFUND_COMPLETE: (id) => `${BASE_URL}${VERSION}/order/refund/complete/${id}`,
   },
 
     INVOICE: {
-        CREATE: `${VERSION}/invoice/create`,
-        GET: (id) => `${VERSION}/invoice/get/${id}`,
-        UPDATE: (id) => `${VERSION}/invoice/update/${id}`,
-        DELETE: (id) => `${VERSION}/invoice/delete/${id}`,
+        CREATE: `${BASE_URL}${VERSION}/invoice/create`,
+        GET: (id) => `${BASE_URL}${VERSION}/invoice/get/${id}`,
+        UPDATE: (id) => `${BASE_URL}${VERSION}/invoice/update/${id}`,
+        DELETE: (id) => `${BASE_URL}${VERSION}/invoice/delete/${id}`,
     },
 
   PRODUCTREVIEWS: {
-    ADD: `${VERSION}/product-review/create`,
-    GET_ALL: (id) => `${VERSION}/product-review/all/${id}`,
-    UPDATE: (id) => `${VERSION}/product-review/update/${id}`,
-    DELETE: (id) => `${VERSION}/product-review/delete/${id}`,
+    ADD: `${BASE_URL}${VERSION}/product-review/create`,
+    GET_ALL: (id) => `${BASE_URL}${VERSION}/product-review/all/${id}`,
+    UPDATE: (id) => `${BASE_URL}${VERSION}/product-review/update/${id}`,
+    DELETE: (id) => `${BASE_URL}${VERSION}/product-review/delete/${id}`,
   },
 };

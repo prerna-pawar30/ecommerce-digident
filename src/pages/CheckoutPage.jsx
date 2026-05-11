@@ -8,7 +8,7 @@ import { ChevronLeft, ShoppingBag, Edit2 } from "lucide-react";
 
 // API Services
 import { createOrder, verifyPayment, fetchActiveCoupons, createOrderInvoice } from "../api/ApiService";
-import { resetCart } from "../store/slices/CartSlice";
+import { resetCart, fetchCartItems } from "../store/slices/CartSlice";
 
 // Component Imports
 import DynamicProgressStepper from "../components/ui/steps";
@@ -109,31 +109,91 @@ const CheckoutPage = () => {
     return { subtotal, discountAmount, total: subtotal - discountAmount };
   }, [cartItems, selectedCoupon]);
 
-  const handleApplyCoupon = (coupon) => {
-    if (selectedCoupon?.couponId === coupon.couponId) {
-      setSelectedCoupon(null);
-      Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Coupon removed', showConfirmButton: false, timer: 1500 });
-      return;
-    }
+const handleApplyCoupon = async (coupon) => {
+  if (loading) return;
 
-    // Secondary validation for Buy X Get Y items presence
-    if (coupon.couponType.includes("BUY_X_GET_Y")) {
+  const isSelected =
+    selectedCoupon?.couponId === coupon.couponId;
+
+  if (isSelected) {
+    setSelectedCoupon(null);
+
+    Swal.fire({
+      title: "Coupon Removed",
+      icon: "success",
+      timer: 1200,
+      showConfirmButton: false,
+    });
+
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const response = await dispatch(fetchCartItems()).unwrap();
+
+    const latestItems = response?.data?.items || [];
+
+    if (coupon?.couponType === "BUY_X_GET_Y_FREE"){
       const rule = coupon.buyXGetY;
-      const buyItem = cartItems.find(i => rule.buyProducts.some(p => p.productId === (i.product?.id || i.productId)));
-      const getItem = cartItems.find(i => rule.getProducts.some(p => p.productId === (i.product?.id || i.productId)));
 
-      if (!buyItem || buyItem.quantity < rule.buyQuantity) {
-        return Swal.fire("Condition Not Met", `Add ${rule.buyQuantity}x ${rule.buyProducts[0]?.productName} first.`, "warning");
+      console.log("Cart Items:", latestItems);
+      console.log("Rule:", rule);
+
+      const itemsInBuyBrand = latestItems.filter(
+        (i) => i.brand?.id === rule.buyBrand?.brandId
+      );
+
+      const totalBuyQuantity = itemsInBuyBrand.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+
+      const hasGetBrandProduct = latestItems.some(
+        (i) => i.brand?.id === rule.getBrand?.brandId
+      );
+
+      if (totalBuyQuantity < rule.buyQuantity) {
+        return Swal.fire({
+          title: "Condition Not Met",
+          text: `Add at least ${rule.buyQuantity} items from ${rule.buyBrand.brandName} to qualify.`,
+          icon: "warning",
+          confirmButtonColor: "#E68736",
+        });
       }
-      if (!getItem) {
-        return Swal.fire("Free Item Missing", `Add ${rule.getProducts[0]?.productName} to cart to get the discount.`, "info");
+
+      if (!hasGetBrandProduct) {
+        return Swal.fire({
+          title: "Free Item Missing",
+          text: `Add a product from ${rule.getBrand.brandName} to your cart.`,
+          icon: "info",
+          confirmButtonColor: "#E68736",
+        });
       }
     }
 
     setSelectedCoupon(coupon);
-    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ["#E68736", "#000000", "#ffffff"] });
-    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: `Applied: ${coupon.code}`, showConfirmButton: false, timer: 2000 });
-  };
+
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    Swal.fire({
+      title: "Error",
+      text: "Could not verify cart status.",
+      icon: "error",
+    });
+
+  } finally {
+    setLoading(false);
+  }
+};
 
 const handlePlaceOrder = useCallback(async ({ gstAmount, gstPercentage }) => {
     if (!deliveryAddress) return Swal.fire("Required", "Select shipping address", "warning");
