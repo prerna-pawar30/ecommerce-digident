@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-// 1. Import the service instead of the raw client
 import { fetchMyOrders } from "../api/ApiService"; 
 import { Loader2, Package } from "lucide-react";
 import Breadcrumb from "../components/ui/Breadcrumb";

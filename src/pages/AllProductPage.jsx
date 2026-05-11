@@ -14,7 +14,7 @@ import Menu from "../components/shopSection/Menu";
 import FilterHeader from "../components/all-products/FilterHeader";
 import ProductGrid from "../components/all-products/ProductGrid";
 
-const LIMIT = 1000; // 🔥 reduced for performance
+const LIMIT = 2000; 
 
 function AllProduct() {
   const location = useLocation();
