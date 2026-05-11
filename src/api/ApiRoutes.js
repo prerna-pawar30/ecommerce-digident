@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.yourdomain.com"; // Change this to your actual API base URL
+
 const VERSION = "/api/v1";
 
 export const API_ROUTES = {
