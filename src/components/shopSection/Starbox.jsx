@@ -76,8 +76,8 @@ const StatItem = ({ value, label, icon, delay = 0 }) => {
 const Starbox = memo(({ brandCount = 0, productCount = 0 }) => {
   return (
     <section
-      className="mx-4 sm:mx-6 border border-[#F0CDBE] shadow-sm rounded-xl py-2 sm:py-4"
-      style={{ background: "linear-gradient(160deg, #F7E6DC 0%, #E68736 100%)" }}
+      className="mx-4 sm:mx-6 border border-[#F0CDBE] shadow-sm rounded-xl py-2 sm:py-4 bg-[#F7E6DC]"
+      
     >
       <div className="px-5 sm:px-10">
         <div className="grid grid-cols-2 gap-y-3 sm:flex sm:justify-around">

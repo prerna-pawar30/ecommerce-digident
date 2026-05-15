@@ -192,7 +192,7 @@ export default function CheckoutAddressModule() {
                   className="w-full text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:shadow-lg disabled:bg-gray-200 transition-all cursor-pointer  hover:bg-white hover:text-white"
                        style={{ 
                         cursor: "pointer", 
-                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                        background: '#E68736' 
                       }}
                 >
                   Deliver to this address

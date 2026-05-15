@@ -83,7 +83,7 @@ export default function AddressModule() {
               className="flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl font-bold transition-all shadow-lg shadow-orange-200 active:scale-95"
               style={{ 
                 cursor: "pointer", 
-                background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                background: '#E68736', 
               }}
             >
               <HiPlus size={20} />

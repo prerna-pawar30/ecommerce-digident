@@ -30,9 +30,9 @@ export default function Footer() {
 
   return (
     <footer 
-      className="relative overflow-hidden"
-      /* Added brand gradient here */
-      style={{ background: 'linear-gradient(160deg, #F7E6DC 0%, #E68736 100%)' }}
+      className="relative overflow-hidden bg-[#F7E6DC]"
+      
+    
     >
       <div 
         className="mx-auto pt-26 pb-10 bg-cover bg-center bg-no-repeat px-6 sm:px-10"
@@ -69,10 +69,10 @@ export default function Footer() {
               <FaChevronDown className={`lg:hidden transition-transform duration-300 ${openSection === 'links' ? 'rotate-180' : ''}`} />
             </div>
             <ul className={`flex flex-col space-y-2 text-gray-700 overflow-hidden transition-all duration-300 ${openSection === 'links' ? 'max-h-60 pb-4' : 'max-h-0 lg:max-h-full'}`}>
-              <Link to="/about" className="hover:text-white cursor-pointer text-[18px]">About Us</Link>
-              <Link to="/products" className="hover:text-white cursor-pointer text-[18px]">Our Products</Link>
-              <Link to="/shop" className="hover:text-white cursor-pointer text-[18px]">Shop</Link>
-              <Link to="/contact" className="hover:text-white cursor-pointer text-[18px]">Contact Us</Link>
+              <Link to="/about" className="hover:text-[#E68736] cursor-pointer text-[18px]">About Us</Link>
+              <Link to="/products" className="hover:text-[#E68736] cursor-pointer text-[18px]">Our Products</Link>
+              <Link to="/shop" className="hover:text-[#E68736] cursor-pointer text-[18px]">Shop</Link>
+              <Link to="/contact" className="hover:text-[#E68736] cursor-pointer text-[18px]">Contact Us</Link>
             </ul>
           </div>
 
@@ -86,9 +86,9 @@ export default function Footer() {
               <FaChevronDown className={`lg:hidden transition-transform duration-300 ${openSection === 'cats' ? 'rotate-180' : ''}`} />
             </div>
             <ul className={`space-y-2 text-gray-700 overflow-hidden transition-all duration-300 ${openSection === 'cats' ? 'max-h-60 pb-4' : 'max-h-0 lg:max-h-full'}`}>
-              <li className="hover:text-white cursor-pointer text-[18px]">Prosthetic Screws</li>
-              <li className="hover:text-white cursor-pointer text-[18px]">Scan Abutments</li>
-              <li className="hover:text-white cursor-pointer text-[18px]">Analogs</li>
+              <li className="hover:text-[#E68736] cursor-pointer text-[18px]">Prosthetic Screws</li>
+              <li className="hover:text-[#E68736] cursor-pointer text-[18px]">Scan Abutments</li>
+              <li className="hover:text-[#E68736] cursor-pointer text-[18px]">Analogs</li>
             </ul>
           </div>
 
@@ -102,10 +102,10 @@ export default function Footer() {
               <FaChevronDown className={`lg:hidden transition-transform duration-300 ${openSection === 'policy' ? 'rotate-180' : ''}`} />
             </div>
             <ul className={`space-y-2 text-gray-700 overflow-hidden transition-all duration-300 ${openSection === 'policy' ? 'max-h-60 pb-4' : 'max-h-0 lg:max-h-full'}`}>
-              <li><Link to="/privacy-policy" className="hover:text-white text-[18px]">Privacy Policy</Link></li>
-              <li><Link to="/Shipping-Policy" className="hover:text-white text-[18px]">Shipping Policy</Link></li>
-              <li><Link to="/TermsOfUse" className="hover:text-white text-[18px]">Terms & Conditions</Link></li>
-              <li><Link to="/Return-Policy" className="hover:text-white text-[18px]">Exchange & Return Policy</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-[#E68736] text-[18px]">Privacy Policy</Link></li>
+              <li><Link to="/Shipping-Policy" className="hover:text-[#E68736] text-[18px]">Shipping Policy</Link></li>
+              <li><Link to="/TermsOfUse" className="hover:text-[#E68736] text-[18px]">Terms & Conditions</Link></li>
+              <li><Link to="/Return-Policy" className="hover:text-[#E68736] text-[18px]">Exchange & Return Policy</Link></li>
             </ul>
           </div>
 
@@ -114,20 +114,20 @@ export default function Footer() {
                   <h3 className="font-bold text-xl mb-3 text-[#011632]">Address</h3>
                   <ul className="space-y-4 text-[#011632]">
                     <li className="flex items-start gap-3 justify-center lg:justify-start font-semibold">
-                      <FaMapMarkerAlt className="text-white text-[20px] mt-1 flex-shrink-0" />
+                      <FaMapMarkerAlt className="text-[#E68736] text-[20px] mt-1 flex-shrink-0" />
                       <p className="text-[15px] leading-relaxed">
                         Digident India Pvt Ltd, 314, Professor Colony, Near Matlani Garden, Behind Agrawal Sweets, Sapna Sangita Road, 
                          Indore, (M.P.)-452001.
                       </p>
                     </li>
                     <li className="flex items-center gap-3 justify-center lg:justify-start">
-                      <FaPhoneAlt className="text-white text-xl flex-shrink-0" />
+                      <FaPhoneAlt className="text-[#E68736] text-xl flex-shrink-0" />
                       <span className="font-semibold text-[15px]">
                         +91 9294503001<br />+91 9294503002<br />+91 9294503003
                       </span>
                     </li>
                     <li className="flex items-center gap-3 justify-center lg:justify-start">
-                      <FaEnvelope className="text-white text-xl flex-shrink-0" />
+                      <FaEnvelope className="text-[#E68736] text-xl flex-shrink-0" />
                       <span className="font-semibold text-[15px]">info@digident.in</span>
                     </li>
                   </ul>

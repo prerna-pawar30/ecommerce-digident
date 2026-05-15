@@ -164,7 +164,7 @@ export default function AddressFormPage({ initialData, onCancel, onSuccess }) {
     style={{ 
       background: loading 
         ? '#9CA3AF' 
-        : 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)',
+        : '#E68736',
       border: 'none',
       cursor: loading ? "not-allowed" : "pointer"
     }}

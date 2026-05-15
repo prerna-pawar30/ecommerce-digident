@@ -20,7 +20,7 @@ export default function OrderActionBar({
     cursor: cancelLoading ? "not-allowed" : "pointer",
     background: cancelLoading 
       ? '#9CA3AF' 
-      : 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)',
+      : '#E68736', // Solid color for better contrast and performance
     border: 'none' // Remove default borders to let gradient shine
   };
 

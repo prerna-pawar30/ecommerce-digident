@@ -24,7 +24,7 @@ const ProfileStats = ({ ordersCount, cartItemsCount, addressesCount, onCartClick
       className="w-full text-white p-4 md:p-6 rounded-[2rem] flex items-center justify-between group  transition-all shadow-lg active:scale-[0.98]"
        style={{ 
                         cursor: "pointer", 
-                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                        background: '#E68736', 
                       }}
     >
       <div className="flex items-center gap-3 md:gap-4">

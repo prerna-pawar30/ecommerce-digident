@@ -75,8 +75,8 @@ const Brand = memo(({ brands = [], loading, onBrandClick }) => {
                 onClick={() =>
                   onBrandClick?.(brand._id)
                 }
-                className="bg-white rounded-xl flex items-center justify-center p-2 sm:p-4 h-[80px] sm:h-[100px] text-center text-sm sm:text-lg font-bold border border-orange-400 hover:border-[#E68736] hover:text-white hover:shadow-md active:scale-95 cursor-pointer transition-all"
-                style={{ background: 'linear-gradient(160deg, #F7E6DC 0%, #E68736 100%)' }}
+                className="bg-white rounded-xl flex items-center justify-center p-2 sm:p-4 h-[80px] sm:h-[100px] text-center text-sm sm:text-lg font-bold border border-orange-400 hover:border-[#E68736] hover:text-[#E68736] hover:shadow-md active:scale-95 cursor-pointer transition-all"
+               
               >
                 <span className="line-clamp-2 uppercase tracking-tight">
                   {brand.brandName}

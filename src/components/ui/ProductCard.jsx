@@ -61,7 +61,7 @@ export default function ProductCard({ product, isLast, lastItemRef }) {
             className="px-3 md:px-4 py-1.5 md:py-2 text-[11px] md:text-sm font-bold rounded-lg  text-white  transition-all"
               style={{ 
                         cursor: "pointer", 
-                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                        background: '#E68736', 
                       }}
           >
             View

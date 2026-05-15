@@ -82,7 +82,7 @@ const ProductSelectors = ({
             }`}
             style={{
               background: isSelected
-                ? "linear-gradient(160deg, #f8c1a1, #eb730b 100%)"
+                ? "#E68736"
                 : "",
             }}
           >

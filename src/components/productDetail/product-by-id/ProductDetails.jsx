@@ -143,7 +143,7 @@ const ProductDetails = ({ productData }) => {
                   cursor: !isAvailable || loadingType === "cart" ? "not-allowed" : "pointer",
                   background: !isAvailable || loadingType === "cart" 
                     ? "" // Let Tailwind's bg-gray-400 take over
-                    : "linear-gradient(160deg, #f8c1a1, #eb730b 100%)",
+                    : "#E68736", // Use solid color for better contrast and performance
                 }}
               >
                 {loadingType === "cart" ? "Adding..." : "Add to Cart"}
@@ -162,7 +162,7 @@ const ProductDetails = ({ productData }) => {
                   cursor: !isAvailable || loadingType === "buyNow" ? "not-allowed" : "pointer",
                   background: !isAvailable || loadingType === "buyNow" 
                     ? "" 
-                    : "linear-gradient(160deg, #f8c1a1, #eb730b 100%)",
+                    : "#E68736",
                 }}
               >
                 {loadingType === "buyNow" ? "Redirecting..." : "Buy Now"}

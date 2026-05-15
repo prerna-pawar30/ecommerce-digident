@@ -35,7 +35,7 @@ export default function CartItem({ item, onRemove, onUpdate }) {
         </h2>
 
         <p className="text-[16px] sm:text-[15px] text-gray-500 mt-1">
-          Brand: {item.brand?.brandName || "Generic"}
+          Brand: {item.brand?.name}
         </p>
 
         {item.variant?.name && (

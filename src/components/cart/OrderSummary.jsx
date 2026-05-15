@@ -23,7 +23,7 @@ export default function OrderSummary({ items, subtotal, totalQuantity }) {
             >
               <div className="flex-1 min-w-0">
                 <p className="text-[16px] sm:text-[18px] font-semibold text-gray-800 line-clamp-1">
-                  {item.product?.name}
+                  {item.product?.name} Compatible {item.category?.name}
                 </p>
                 <p className="text-[12px] sm:text-[16px] text-gray-400 uppercase tracking-tighter break-words">
                   {item.variant?.name || "Standard"}
@@ -95,22 +95,16 @@ export default function OrderSummary({ items, subtotal, totalQuantity }) {
                   },
                 })
               }
-              className="w-full  text-white py-3 sm:py-4 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-[#cf7529] transition-all cursor-pointer shadow-md shadow-orange-100 text-sm sm:text-base"
-              style={{ 
-                        cursor: "pointer", 
-                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
-                      }}
+              className="w-full  text-white hover:text-[#E68736] bg-[#E68736] py-3 sm:py-4 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-white transition-all cursor-pointer border border-[#E68736] text-sm sm:text-base"
+              
             >
               Proceed to Checkout <HiArrowRight />
             </button>
 
             <button
               onClick={() => navigate("/all-products")}
-              className="w-full  text-white py-2 sm:py-3 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-orange-50 transition-all cursor-pointer text-sm sm:text-base"
-              style={{ 
-                        cursor: "pointer", 
-                        background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
-                      }}
+              className="w-full  text-white hover:text-[#E68736] bg-[#E68736] py-2 sm:py-3 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-white transition-all cursor-pointer border border-[#E68736] text-sm sm:text-base"
+             
             >
               Continue Shopping
             </button>

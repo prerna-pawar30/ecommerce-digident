@@ -259,7 +259,7 @@ const UserInvoiceButton = ({ invoiceId, className }) => {
         cursor: isFetching ? "not-allowed" : "pointer", 
         background: isFetching 
           ? '#9CA3AF' 
-          : 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+          : '#E68736', // Solid color for better contrast and performance
       }}
     >
       {isFetching ? <Loader2 className="animate-spin" size={16} /> : <Download size={16} />}
