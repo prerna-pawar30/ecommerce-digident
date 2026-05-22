@@ -109,10 +109,10 @@ const OrderDetailsPage = () => {
 
     const isUpdating = order.returnRequests?.some(req => req.status === "pending");
 
-    const returnableItems = order.items.map((item) => {
-      const remaining = item.quantity - (item.returnedQuantity || 0);
-      return { ...item, remainingQty: remaining };
-    });
+   const returnableItems = order.items.map((item) => {
+  const remaining = item.quantity; // <-- Removes the subtraction logic
+  return { ...item, remainingQty: remaining };
+});
 
     const itemsHtml = returnableItems
       .map((item, index) => {

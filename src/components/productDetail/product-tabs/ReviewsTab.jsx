@@ -65,7 +65,7 @@ const ReviewsTab = ({ reviewsData, reviewForm, setReviewForm, handleReviewSubmit
                   cursor: isSubmitting ? "not-allowed" : "pointer", 
                   background: isSubmitting 
                     ? '#9CA3AF' // Gray color when submitting
-                    : 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                    : 'linear-gradient(160deg, #E68736 100%)' 
                 }}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Review'}
@@ -79,7 +79,7 @@ const ReviewsTab = ({ reviewsData, reviewForm, setReviewForm, handleReviewSubmit
                 className="text-white px-8 py-2 rounded-lg font-bold"
                 style={{ 
                   cursor: "pointer", 
-                  background: 'linear-gradient(160deg, #f8c1a1, #eb730b 100%)' 
+                  background: 'linear-gradient(160deg, #E68736 100%)' 
                 }}
               >
                 Login Now

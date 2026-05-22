@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { 
   HiMail, HiPhone, HiOfficeBuilding, HiLocationMarker, 
-  HiChevronRight, HiOutlineShoppingBag,  
+  HiChevronRight, HiOutlineShoppingBag, HiTrash
 } from "react-icons/hi";
 import Swal from 'sweetalert2';
 
-import { fetchUserDashboard, updateUserProfile } from "../api/ApiService";
+// Added deleteUserAccount to your API services imports
+import { fetchUserDashboard, updateUserProfile, deleteUserAccount } from "../api/ApiService";
 
 import ProfileHeader from "../components/user-profile/ProfileHeader";
 import ProfileStats from "../components/user-profile/ProfileStats";
@@ -16,7 +17,7 @@ import EditProfileModal from "../components/user-profile/EditProfileModal";
 
 const ProfileSkeleton = () => (
   <div className="min-h-screen pb-20 font-sans animate-pulse bg-gray-50/30">
-    <div className="h-44 md:h-94 w-full bg-gray-200" />
+    <div className="h-38 md:h-94 w-full bg-gray-200" />
     <main className="max-w-6xl mx-auto px-4 md:px-8 mt-12 md:mt-24">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-6">
@@ -127,12 +128,62 @@ const UserProfile = () => {
     }
   };
 
+  // Safe Deletion Handler with Multi-step verification checks
+  const handleDeleteAccount = async () => {
+    if (!user?._id && !user?.userId) return;
+    const targetId = user?.userId || user?._id;
+
+    const confirmation = await Swal.fire({
+      title: "Delete Account?",
+      html: `
+        <div class="text-left text-xs text-slate-500 space-y-2 leading-relaxed">
+          <p class="font-bold text-rose-600 uppercase tracking-wide">⚠️ Warning: This action cannot be undone!</p>
+          <p>• Your personal profile info, data parameters, and dynamic session logs will be permanently erased.</p>
+          <p>• Saved address keys, active product coupons, and billing points will clear instantly.</p>
+          <p>• You will completely lose tracking visibility context over current order histories.</p>
+        </div>
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete Permanently",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#df4759",
+      cancelButtonColor: "#94a3b8",
+      reverseButtons: true
+    });
+
+    if (confirmation.isConfirmed) {
+      try {
+        Swal.fire({ title: "Deleting account...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        
+        const response = await deleteUserAccount(targetId);
+        
+        if (response.success) {
+          await Swal.fire({
+            icon: "success",
+            title: "Account Deleted",
+            text: "Your profile records have been successfully purged from our databases.",
+            confirmButtonColor: "#E68736"
+          });
+          
+          // Reset local application memory buffers and redirect out safely
+          localStorage.clear();
+          sessionStorage.clear();
+          dispatch({ type: "auth/logout" }); 
+          navigate("/login", { replace: true });
+        }
+      } catch (error) {
+        Swal.fire("Error", error.response?.data?.message || "Failed to process data deletion request", "error");
+      }
+    }
+  };
+
   if (loading) return <ProfileSkeleton />;
 
   const { user, addresses, orders } = dashboardData;
 
   return (
-    <div className="min-h-screen pb-20 font-sans ">
+    <div className="min-h-screen pb-20 font-sans">
       <ProfileHeader user={user} onEditClick={() => setIsEditModalOpen(true)} />
 
       <main className="max-w-6xl mx-auto px-4 md:px-8 mt-26 md:mt-24">
@@ -157,6 +208,23 @@ const UserProfile = () => {
                 <InfoItem icon={<HiOfficeBuilding />} label="Institute Name" value={user?.instituteName || "Not provided"} />
               </div>
             </div>
+
+            {/* NEW CONTAINER: DELETE ACCOUNT MANAGEMENT OPTIONS MODULE */}
+            <div className="bg-rose-50/40 rounded-[2rem] p-6 border border-rose-100 shadow-sm">
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-rose-500/70 mb-2">
+                Danger Zone
+              </h3>
+              <p className="text-xs text-slate-500 font-medium leading-relaxed mb-4">
+                Permanently purge your structural profile, dynamic addresses tracking data, and access metrics entirely from system registers.
+              </p>
+              <button 
+                onClick={handleDeleteAccount}
+                className="w-full py-3.5 px-5 bg-white hover:bg-rose-600 border border-rose-200 text-rose-600 hover:text-white font-bold text-sm rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 shadow-sm shadow-rose-100"
+              >
+                <HiTrash size={16} />
+                Delete Account
+              </button>
+            </div>
           </div>
 
           {/* MAIN CONTENT */}
@@ -167,7 +235,6 @@ const UserProfile = () => {
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {addresses?.length > 0 ? (
                   addresses.map((addr) => (
-                    /* FIX 1: Use addressId for unique key */
                     <div key={addr.addressId || addr._id} className="p-5 rounded-2xl bg-slate-50/50 flex gap-4 border border-slate-100 hover:border-orange-200 transition-colors">
                       <HiLocationMarker className="text-[#e67e22] mt-1 shrink-0" size={20} />
                       <div>
@@ -199,14 +266,13 @@ const UserProfile = () => {
                     
                     if (!orderDetail) return null;
 
-                    // Dynamic status styling logic
                     const getStatusStyles = (status) => {
                       const s = status?.toLowerCase();
                       if (s === 'delivered' || s === 'completed') 
                         return 'bg-emerald-50 text-emerald-600 border-emerald-100';
                       if (s === 'cancelled' || s === 'failed') 
                         return 'bg-rose-50 text-rose-600 border-rose-100';
-                      return 'bg-orange-50 text-orange-600 border-orange-100'; // Default/Pending
+                      return 'bg-orange-50 text-orange-600 border-orange-100';
                     };
 
                     return (
@@ -215,24 +281,22 @@ const UserProfile = () => {
                         className="p-5 flex items-center justify-between hover:bg-slate-50/50 transition-all cursor-pointer group" 
                         onClick={() => navigate(`/order/${orderDetail.orderId}`)}
                       >
-                        {/* Left: Icon and ID/Date */}
                         <div className="flex items-center gap-4">
                           <div className="h-11 w-11 bg-orange-50 rounded-2xl flex items-center justify-center text-[#e67e22] group-hover:scale-105 group-hover:bg-orange-100 transition-all duration-200 shadow-sm">
                             <HiOutlineShoppingBag size={20} />
                           </div>
                           <div>
-              <p className="text-sm font-bold text-slate-800 tracking-tight line-clamp-1">
-                {orderDetail.items?.[0]?.productName || "Unknown Product"} campatible {orderDetail.items?.[0]?.categoryName}
-                {orderDetail.items?.length > 1 && (
-                  <span className="text-orange-500 font-medium ml-1">
-                    +{orderDetail.items.length - 1} more
-                  </span>
-                )}
-              </p>
-            </div>
+                            <p className="text-sm font-bold text-slate-800 tracking-tight line-clamp-1">
+                              {orderDetail.items?.[0]?.productName || "Unknown Product"} compatible {orderDetail.items?.[0]?.categoryName}
+                              {orderDetail.items?.length > 1 && (
+                                <span className="text-orange-500 font-medium ml-1">
+                                  +{orderDetail.items.length - 1} more
+                                </span>
+                              )}
+                            </p>
+                          </div>
                         </div>
 
-                        {/* Right: Price and Status */}
                         <div className="flex flex-col items-end gap-1.5">
                           <p className="text-sm font-extrabold text-slate-900">
                             ₹{orderDetail.grandTotal?.toLocaleString('en-IN')}

@@ -59,8 +59,11 @@ const AppRoutes = ({ token }) => {
       {/* Public Routes */}
       <Route path="/" element={<Shop />} />
       <Route path="/shop" element={<Shop />} />
+    {/* Full page catalog view */}
       <Route path="/hot-selling" element={<HotSellingPage />} />
-      <Route path="/hotselling" element={<HotSelling />} />
+
+      {/* Fallback template if you want to render the raw component alone on its own URL */}
+      <Route path="/hotselling" element={<HotSelling products={[]} loading={false} />} />
       <Route path="/all-products" element={<AllProduct />} />
       <Route path="/productpage/:productId" element={<ProductPage />} />
       <Route path="/review/:productId" element={<ReviewPage />} />

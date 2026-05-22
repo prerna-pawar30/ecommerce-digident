@@ -39,7 +39,7 @@ const ProductTabs = ({ productData }) => {
         getRatingsData();
       }
     } catch (err) {
-      Swal.fire({ icon: 'error', title: 'Error', text: 'Could not post review' });
+      Swal.fire({ icon: 'error', title: 'Error', text: 'you already submitted a review.', confirmButtonColor: '#E68736' });
     } finally {
       setIsSubmitting(false);
     }

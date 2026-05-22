@@ -17,6 +17,7 @@ export const API_ROUTES = {
     ME: `${VERSION}/user/me`,
     UPDATE_PROFILE: `${VERSION}/user/profile-update`,
     DASHBOARD_STATS: `${VERSION}/user/dashboard`,
+    DELETE: (id) => `${VERSION}/user/delete/${id}`,
   },
 
   BRANDS: {

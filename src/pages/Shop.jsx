@@ -47,8 +47,8 @@ function Shop() {
         ] = await Promise.all([
           fetchCategories(),
           fetchAllBrands(),
-          fetchBestSellingProducts(),
-          fetchBannersByStatus(true), // Updated API call
+          fetchBestSellingProducts(), // Returns direct array now: response.data?.data
+          fetchBannersByStatus(true), 
           fetchActiveProducts({ limit: 10 })
         ]);
 
@@ -59,10 +59,10 @@ function Shop() {
           // Brands Array
           brands: brandRes?.data?.brands || brandRes?.brands || [],
           
-          // Best Selling / Hot Selling Array
-          hotSelling: bestRes?.data || [],
+          // FIX: bestRes is already the parsed array from your updated ApiService layer
+          hotSelling: Array.isArray(bestRes) ? bestRes : (bestRes?.data || []),
           
-          // Banners Array: Extracting from data.banners per your new response
+          // Banners Array
           banners: bannerRes?.data?.banners || [],
           
           // Total Count
@@ -93,7 +93,6 @@ function Shop() {
         loading={loading}
       />
 
-      {/* Passing the extracted banners array */}
       <Hero
         bannerData={data.banners}
         loading={loading}
@@ -104,8 +103,6 @@ function Shop() {
         productCount={data.totalProducts}
         loading={loading}
       />
-
-
 
       <Categories
         categories={data.categories}
@@ -125,14 +122,16 @@ function Shop() {
         }
       />
       
+      {/* This component will now correctly receive your products array fallback */}
       <HotSelling
         products={data.hotSelling}
         loading={loading}
       />
+      
       <RelatedProducts 
-            brandId={null} 
-            currentProductId="general-shop" 
-          />
+        brandId={null} 
+        currentProductId="general-shop" 
+      />
     </div>
   );
 }

@@ -1,78 +1,11 @@
 import React from "react";
-import { Clock, PackageCheck, Truck, CheckCircle, RotateCcw, XCircle, RefreshCcw } from "lucide-react";
-
-const statusSteps = [
-  {
-    key: "placed",
-    label: "Ordered",
-    icon: Clock,
-    getDate: order => order.createdAt,
-    isActive: () => true,
-    isCompleted: order => ["confirmed", "shipped", "delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    color: () => "bg-green-500",
-  },
-  {
-    key: "confirmed",
-    label: "Confirmed",
-    icon: PackageCheck,
-    getDate: order => order.paidAt || order.statusUpdatedAt,
-    isActive: order => ["confirmed", "shipped", "delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus) || order.paymentStatus === "paid",
-    isCompleted: order => ["shipped", "delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    color: order => (order.paymentStatus === "paid" || order.orderStatus !== "placed") ? "bg-green-500" : "bg-gray-200",
-  },
-  {
-    key: "shipped",
-    label: "Shipped",
-    icon: Truck,
-    getDate: order => order.shippedAt || order.statusUpdatedAt,
-    isActive: order => ["shipped", "delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    isCompleted: order => ["delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    color: order => ["shipped", "delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus) ? "bg-green-500" : "bg-gray-200",
-  },
-  {
-    key: "delivered",
-    label: "Delivered",
-    icon: CheckCircle,
-    getDate: order => order.deliveredAt || order.statusUpdatedAt,
-    isActive: order => ["delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    isCompleted: order => ["returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    color: order => ["delivered", "returning", "returned", "partial_returned", "refunded"].includes(order.orderStatus) ? "bg-green-500" : "bg-gray-200",
-  },
-  {
-    key: "returning",
-    label: "Returning",
-    icon: RefreshCcw,
-    getDate: order => order.returnRequests?.[0]?.requestedAt,
-    isActive: order => order.orderStatus === "returning",
-    isCompleted: order => ["returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    color: order => order.orderStatus === "returning" ? "bg-orange-500" : "bg-gray-200",
-  },
-  {
-    key: "returned",
-    label: "Returned",
-    icon: RotateCcw,
-    getDate: order => order.returnRequests?.[0]?.approvedAt || order.statusUpdatedAt,
-    isActive: order => ["returned", "partial_returned", "refunded"].includes(order.orderStatus),
-    isCompleted: order => order.orderStatus === "refunded",
-    color: order => ["returned", "partial_returned"].includes(order.orderStatus) ? "bg-orange-500" : order.orderStatus === "refunded" ? "bg-green-500" : "bg-gray-200",
-  },
-  {
-    key: "refunded",
-    label: "Refunded",
-    icon: XCircle,
-    getDate: order => order.refundedAt,
-    isActive: order => order.paymentStatus === "refunded" || order.orderStatus === "refunded",
-    isCompleted: () => false,
-    color: order => (order.paymentStatus === "refunded" || order.orderStatus === "refunded") ? "bg-red-500" : "bg-gray-200",
-  },
-];
+import { Clock, PackageCheck, Truck, CheckCircle, XCircle, RotateCcw } from "lucide-react";
 
 const formatDate = (dateString) => {
-  if (!dateString) return "--";
+  if (!dateString) return null;
   return new Date(dateString).toLocaleString("en-IN", {
     day: "2-digit",
     month: "short",
-    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
@@ -80,74 +13,190 @@ const formatDate = (dateString) => {
 };
 
 const OrderProgressTracker = ({ order }) => {
-  // 1. Filter visible steps
-  const visibleSteps = statusSteps.filter(step => {
-    if (step.key === "returning" && order.orderStatus !== "returning") return false;
-    if (step.key === "returned" && !["returned", "partial_returned", "refunded"].includes(order.orderStatus)) return false;
-    if (step.key === "refunded" && !(order.paymentStatus === "refunded" || order.orderStatus === "refunded")) return false;
-    return true;
-  });
+  if (!order) return null;
 
-  // 2. Find current status index
-  const lastActiveIdx = visibleSteps.map(s => s.isActive(order)).lastIndexOf(true);
+  const isCancelled = order.orderStatus === "cancelled";
+  const isReturnedState = 
+    order.orderStatus === "returned" || 
+    order.paymentStatus === "refunded" || 
+    (order.items && order.items.some(item => item.returnedQuantity > 0));
 
-  // 3. Calculate width (Removing unused completedStepsCount)
-  const progressWidth = (visibleSteps.length > 1) 
-    ? (lastActiveIdx / (visibleSteps.length - 1)) * 100 
-    : 0;
+  // 1. Core structural progress array map
+  const baseSteps = [
+    {
+      key: "placed",
+      label: "Order Placed",
+      icon: Clock,
+      getDate: (o) => o.createdAt,
+      weight: 1,
+    },
+    {
+      key: "confirmed",
+      label: "Confirmed",
+      icon: PackageCheck,
+      getDate: (o) => ["confirmed", "shipped", "delivered", "returned"].includes(o.orderStatus) ? (o.statusUpdatedAt || o.paidAt) : null,
+      weight: 2,
+    },
+    {
+      key: "shipped",
+      label: "Shipped",
+      icon: Truck,
+      getDate: (o) => o.shippedAt,
+      weight: 3,
+    },
+  ];
+
+  // 2. Dynamically add terminating state steps
+  let statusSteps = [...baseSteps];
+
+  if (isCancelled) {
+    statusSteps.push({
+      key: "cancelled",
+      label: "Cancelled",
+      icon: XCircle,
+      getDate: (o) => o.statusUpdatedAt || o.updatedAt,
+      weight: 4,
+      isDanger: true, // Triggers Red Theme
+    });
+  } else {
+    statusSteps.push({
+      key: "delivered",
+      label: "Delivered",
+      icon: CheckCircle,
+      getDate: (o) => o.deliveredAt,
+      weight: 4,
+    });
+
+    if (isReturnedState) {
+      statusSteps.push({
+        key: "returned",
+        label: "Returned",
+        icon: RotateCcw,
+        getDate: (o) => o.statusUpdatedAt, 
+        weight: 5,
+        isDanger: true, // Triggers Red Theme for Returned as requested
+      });
+    }
+  }
+
+  // 3. Status relational weights
+  const statusWeights = {
+    placed: 1,
+    confirmed: 2,
+    shipped: 3,
+    delivered: 4,
+    cancelled: 4, 
+    returned: 5,
+  };
+
+  const currentWeight = statusWeights[order.orderStatus] || 1;
 
   return (
-    <div className="bg-white p-6 md:p-10 rounded-xl mb-6 border border-orange-200">
-      <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between w-full max-w-5xl mx-auto px-4 gap-8 md:gap-0">
-        
-        {/* Background Track Lines */}
-        <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-100 -translate-y-8 z-0"></div>
-        <div className="md:hidden absolute left-[35px] top-0 w-1 h-full bg-gray-100 z-0"></div>
+    <div className="p-6 bg-white rounded-xl border border-orange-200 mb-6 shadow-sm">
+      {/* Header Info */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-100 pb-4 mb-6">
+        <div>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tracking ID</p>
+          <p className="text-sm font-bold text-gray-800 font-mono mt-0.5">{order.orderId}</p>
+        </div>
+        <div className="sm:text-right">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Grand Total</p>
+          <p className="text-base font-extrabold text-gray-900 mt-0.5">₹{order.grandTotal?.toFixed(2)}</p>
+        </div>
+      </div>
 
-        {/* Active Green Line */}
-        <div
-          className={`hidden md:block absolute top-1/2 left-0 h-1 -translate-y-8 z-0 transition-all duration-1000 ease-in-out ${visibleSteps[lastActiveIdx]?.color(order)}`}
-          style={{ width: `${progressWidth}%` }}
-        ></div>
-
-        {/* Mobile Vertical Line */}
-        <div
-          className={`md:hidden absolute left-[35px] top-0 w-1 z-0 transition-all duration-1000 ease-in-out ${visibleSteps[lastActiveIdx]?.color(order)}`}
-          style={{ height: `${progressWidth}%` }}
-        ></div>
-
-        {/* Render visible steps */}
-        {visibleSteps.map((step, idx) => {
+      {/* Tracker Layout */}
+      <div className="relative flex flex-col md:flex-row items-stretch md:items-start justify-between w-full gap-6 md:gap-0 px-2">
+        {statusSteps.map((step, idx) => {
           const Icon = step.icon;
-          const isReached = idx <= lastActiveIdx;
-          
+          const isCompleted = currentWeight > step.weight;
+          const isActive = currentWeight === step.weight;
+          const isUpcoming = currentWeight < step.weight;
+          const stepDate = formatDate(step.getDate(order));
+
+          // Color application state mapping
+          let nodeStyles = "";
+          let lineBgColor = "bg-gray-100";
+          let activeLineStyle = "bg-[#E68736]";
+
+          if (step.isDanger) {
+            nodeStyles = isActive 
+              ? "bg-white text-rose-600 border-2 border-rose-600 ring-4 ring-rose-50 shadow-md" 
+              : "bg-rose-600 text-white shadow-sm ring-4 ring-rose-50";
+            activeLineStyle = "bg-rose-500";
+          } else {
+            nodeStyles = isCompleted 
+              ? "bg-[#E68736] text-white shadow-sm ring-4 ring-orange-50" 
+              : isActive 
+                ? "bg-white text-[#E68736] border-2 border-[#E68736] shadow-md ring-4 ring-orange-50" 
+                : "bg-gray-50 text-gray-400 border border-gray-200";
+          }
+
           return (
-            <div
-              key={step.key}
-              className={`relative z-10 flex flex-row md:flex-col items-center flex-1 gap-4 md:gap-0 ${!isReached ? "opacity-40" : ""}`}
-            >
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center border-4 border-white shadow-sm flex-shrink-0 transition-colors duration-500 ${step.color(order)}`}>
-                <Icon size={18} className="text-white" />
+            <div key={step.key} className="flex flex-row md:flex-col items-center flex-1 relative group min-h-[48px] md:min-h-0">
+              
+              {/* Connector Line (Desktop) */}
+              {idx !== statusSteps.length - 1 && (
+                <div className={`hidden md:block absolute top-5 left-[50%] right-[-50%] h-[2px] ${lineBgColor} z-0`}>
+                  <div 
+                    className={`h-full ${activeLineStyle} transition-all duration-500 ease-in-out`}
+                    style={{ width: isCompleted || (isActive && step.isDanger) ? "100%" : "0%" }}
+                  />
+                </div>
+              )}
+
+              {/* Connector Line (Mobile) */}
+              {idx !== statusSteps.length - 1 && (
+                <div className={`md:hidden absolute left-5 top-10 bottom-[-20px] w-[2px] ${lineBgColor} z-0`}>
+                  <div 
+                    className={`w-full ${activeLineStyle} transition-all duration-500 ease-in-out`}
+                    style={{ height: isCompleted || (isActive && step.isDanger) ? "100%" : "0%" }}
+                  />
+                </div>
+              )}
+
+              {/* Icon Node */}
+              <div className="relative z-10 flex-shrink-0">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${nodeStyles}`}>
+                  <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                </div>
               </div>
 
-              <div className="md:mt-4 text-left md:text-center">
-                <p className={`font-bold text-[10px] md:text-xs uppercase tracking-tight ${isReached ? "text-gray-900" : "text-gray-400"}`}>
+              {/* Text Meta Content */}
+              <div className="ml-4 md:ml-0 md:mt-3 text-left md:text-center max-w-[165px]">
+                <h4 className={`text-xs font-bold transition-colors duration-300 
+                  ${step.isDanger && isActive ? "text-rose-600 font-black" : ""}
+                  ${!step.isDanger && isActive ? "text-[#E68736] font-black" : ""}
+                  ${isUpcoming ? "text-gray-400" : ""}
+                  ${isCompleted ? "text-gray-800" : ""}
+                `}>
                   {step.label}
-                </p>
-                <p className="text-[9px] text-gray-400 font-medium whitespace-nowrap">
-                  {formatDate(step.getDate(order))}
-                </p>
+                </h4>
+                
+                {stepDate ? (
+                  <p className="text-[10px] text-gray-400 font-medium mt-0.5 whitespace-normal sm:whitespace-nowrap">
+                    {stepDate}
+                  </p>
+                ) : isActive ? (
+                  <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide mt-0.5 animate-pulse
+                    ${step.isDanger ? "bg-rose-50 text-rose-600" : "bg-orange-50 text-[#E68736]"}
+                  `}>
+                    In Progress
+                  </span>
+                ) : null}
+
+                {/* Inline cancellation logs tracking context */}
+                {step.key === "cancelled" && order.cancellationReason && (
+                  <p className="text-[10px] text-rose-500 font-medium mt-1 md:text-center max-w-[140px] break-words">
+                    Reason: {order.cancellationReason}
+                  </p>
+                )}
               </div>
+
             </div>
           );
         })}
       </div>
-
-      {(order.paymentStatus === "refunded" || order.orderStatus === "refunded") && (
-        <div className="mt-8 text-center text-green-700 text-sm font-semibold bg-green-50 border border-green-100 rounded-lg p-3">
-          Refund processed. Amount will reflect in your bank account within 5–7 working days.
-        </div>
-      )}
     </div>
   );
 };

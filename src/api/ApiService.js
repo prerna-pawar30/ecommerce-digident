@@ -20,6 +20,8 @@ export const AuthService = {
   resetPassword: (token, passwords) => safeRequest(apiClient.post(API_ROUTES.AUTH.RESET_PASSWORD(token), passwords)),
   verifyEmail: (token) => safeRequest(apiClient.get(API_ROUTES.AUTH.VERIFY_EMAIL(token))),
 };
+export const deleteUserAccount = (id) => 
+  safeRequest(apiClient.delete(API_ROUTES.USER.DELETE(id)));
 
 // DASHBOARD SERVICES
 export const fetchAllBrands = () => safeRequest(apiClient.get(API_ROUTES.BRANDS.ALL));
@@ -29,8 +31,14 @@ export const fetchBannerProducts = (id) => safeRequest(apiClient.get(API_ROUTES.
 
 // PRODUCT SERVICES
 export const fetchBestSellingProducts = async () => {
-  const { data } = await apiClient.get(API_ROUTES.PRODUCTS.BEST_SELLING);
-  return data;
+  try {
+    const response = await apiClient.get(API_ROUTES.PRODUCTS.BEST_SELLING);
+    // Explicitly unbox the backend's standard JSON structure
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Error fetching hot selling products:", error);
+    throw error;
+  }
 };
 // Replace the old fetchActiveProducts with this dynamic version
 export const fetchActiveProducts = (params = {}) => {
