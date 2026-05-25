@@ -3,49 +3,49 @@
 
   <!-- Core Storefront & Catalogs -->
   <url>
-    <loc>https://digident.in/</loc>
+    <loc>https://shop.shop.digident.in/</loc>
     <changefreq>daily</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://digident.in/shop</loc>
+    <loc>https://shop.digident.in/shop</loc>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://digident.in/all-products</loc>
+    <loc>https://shop.digident.in/all-products</loc>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://digident.in/hot-selling</loc>
+    <loc>https://shop.digident.in/hot-selling</loc>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <!-- Legal & Operational Policies -->
   <url>
-    <loc>https://digident.in/policies</loc>
+    <loc>https://shop.digident.in/policies</loc>
     <changefreq>monthly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://digident.in/privacy-policy</loc>
+    <loc>https://shop.digident.in/privacy-policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://digident.in/Shipping-Policy</loc>
+    <loc>https://shop.digident.in/Shipping-Policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://digident.in/Return-Policy</loc>
+    <loc>https://shop.digident.in/Return-Policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://digident.in/TermsOfUse</loc>
+    <loc>https://shop.digident.in/TermsOfUse</loc>
     <changefreq>monthly</changefreq>
     <priority>0.30</priority>
   </url>
