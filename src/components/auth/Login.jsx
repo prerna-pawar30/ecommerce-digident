@@ -226,13 +226,17 @@ return (
             </div>
 
             {/* Social Logins */}
-            <div className="grid grid-cols-2 gap-4">
-              <button onClick={loginWithGoogle} className="flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all">
-                <FcGoogle size={20} /> <span className="text-sm font-semibold text-gray-700">Google</span>
-              </button>
-              <button onClick={loginWithMicrosoft} className="flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 ">
+              <button 
+                  onClick={loginWithGoogle} 
+                  className="flex items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-2 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:text-gray-800 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-gray-200"
+                >
+                  <FcGoogle size={22} />
+                  <span>Sign in with Google</span>
+                </button>
+              {/* <button onClick={loginWithMicrosoft} className="flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all">
                 <FaMicrosoft size={18} className="text-[#00a1f1]" /> <span className="text-sm font-semibold text-gray-700">Microsoft</span>
-              </button>
+              </button> */}
             </div>
 
             <p className="text-center text-sm text-gray-500 mt-10">

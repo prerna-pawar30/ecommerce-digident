@@ -79,7 +79,14 @@ const UserInvoiceButton = ({ invoiceId, className }) => {
         doc.setFont("helvetica", "bold").setFontSize(11.5).setTextColor(...BLACK);
         doc.text("DIGIDENT INDIA PRIVATE LIMITED.", 14, PH - 26);
         doc.setFont("helvetica", "normal").setFontSize(10);
-        doc.text(`${invoiceData.seller?.address }`, 14, PH - 20);
+
+          /* --- FIX: Split Address into multiple lines --- */
+          const footerAddr = invoiceData.seller?.address || "";
+          // 180mm leaves a safe margin on standard A4 pages
+          const footerAddrLines = doc.splitTextToSize(footerAddr, 180); 
+
+          // jsPDF accepts arrays directly and prints each line sequentially
+          doc.text(footerAddrLines, 14, PH - 20);
         
         doc.setTextColor(...WHITE);
         doc.text(`Email: ${invoiceData.seller?.email || "info@digident.in"} | Contact: ${invoiceData.seller?.contactNumber || ""}`, 14, PH - 6);

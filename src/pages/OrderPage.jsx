@@ -34,6 +34,11 @@ const OrderDetailsPage = () => {
   const syncInvoiceWithApprovedReturns = useCallback(async (latestOrder) => {
     if (!latestOrder.invoiceId || invoiceSyncedRef.current) return;
 
+    const isPaidState = ["paid", "partial_returned", "partial_refunded"].includes(
+      latestOrder.paymentStatus?.toLowerCase()
+    );
+    
+   const originalPaidAmount = isPaidState ? (latestOrder.grandTotal || latestOrder.totalAmount) : 0;
     const invoicePayload = {
       paymentTerms: "Payable due amount in 10 days",
       termsOfDelivery: "CIP Telangana",
@@ -53,7 +58,7 @@ const OrderDetailsPage = () => {
       })).filter(item => item.qty > 0),
       summary: {
         freightCost: latestOrder.shippingCharge || 0,
-        paidAmount: latestOrder.paymentStatus === "paid" ? latestOrder.grandTotal : 0
+        paidAmount: originalPaidAmount,
       },
       status: "issued",
 

@@ -225,13 +225,17 @@ export default function Register() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <button onClick={loginWithGoogle} className="flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all active:scale-95 font-medium text-gray-700 text-sm">
-                <FcGoogle size={20} /> Google
-              </button>
-              <button onClick={loginWithMicrosoft} className="flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all active:scale-95 font-medium text-gray-700 text-sm">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 ">
+               <button 
+                  onClick={loginWithGoogle} 
+                  className="flex items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-2 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:text-gray-800 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-gray-200"
+                >
+                  <FcGoogle size={22} />
+                  <span>Sign in with Google</span>
+                </button>
+              {/* <button onClick={loginWithMicrosoft} className="flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all active:scale-95 font-medium text-gray-700 text-sm">
                 <FaMicrosoft size={18} className="text-[#00a1f1]" /> Microsoft
-              </button>
+              </button> */}
             </div>
 
             <p className="text-center text-sm text-gray-500 mt-6">
