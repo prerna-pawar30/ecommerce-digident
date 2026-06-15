@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "../../../store/slices/CartSlice";
 import Swal from "sweetalert2";
 
-// Imported Parts
 import ProductGallery from "./ProductGallery";
 import ProductSelectors from "./ProductSelectors";
 import QuantitySelector from "./QuantitySelector";

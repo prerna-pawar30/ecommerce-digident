@@ -15,6 +15,8 @@ import Menu from "../components/shopSection/Menu";
 import Brand from "../components/shopSection/Brand";
 import Categories from "../components/shopSection/Categories";
 import RelatedProducts from "../components/shopSection/RelatedProduct";
+import AdSenseAd from "../components/ui/AdSenseAd";
+import SEOHead from "../components/ui/SEOHead";
 
 function Shop() {
   const navigate = useNavigate();
@@ -85,8 +87,27 @@ function Shop() {
     });
   };
 
+  const shopStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Digident",
+    "url": "https://shop.digident.in",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://shop.digident.in/all-products?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen">
+      <SEOHead
+        title="Buy Digital Dental Products - CAD/CAM & Implant Components"
+        description="Shop premium digital dental products at Digident. Explore CAD/CAM solutions, ScanBridge libraries, implant components, dental accessories online. Fast delivery across India."
+        canonicalPath="/"
+        structuredData={shopStructuredData}
+      />
+
       <Menu
         categories={data.categories}
         brands={data.brands}
@@ -121,7 +142,13 @@ function Shop() {
           handleFilterNavigation({ brand: brandId })
         }
       />
-      
+
+      {/* Mid-page AdSense ad between Brand and HotSelling sections */}
+      {/* Replace slot value with your real AdSense ad slot ID */}
+      <div className="px-4 py-2">
+        <AdSenseAd slot="1060697153" format="auto" />
+      </div>
+
       {/* This component will now correctly receive your products array fallback */}
       <HotSelling
         products={data.hotSelling}

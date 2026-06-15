@@ -13,6 +13,7 @@ import {
 import Menu from "../components/shopSection/Menu";
 import FilterHeader from "../components/all-products/FilterHeader";
 import ProductGrid from "../components/all-products/ProductGrid";
+import SEOHead from "../components/ui/SEOHead";
 
 const LIMIT = 2000; 
 
@@ -109,8 +110,27 @@ const { data: menuData = { categories: [], brands: [] } } = useQuery({
     [isFetchingNextPage, hasNextPage]
   );
 
+  const activeCategory = menuData.categories?.find(c => c._id === categoryId);
+  const activeBrand = menuData.brands?.find(b => b._id === brandId);
+  const seoTitle = activeCategory
+    ? `Buy ${activeCategory.name} - Digital Dental Products`
+    : activeBrand
+    ? `${activeBrand.name} Products - Digident`
+    : "All Digital Dental Products - CAD/CAM, Implants & Accessories";
+  const seoDesc = activeCategory
+    ? `Browse all ${activeCategory.name} products at Digident. Premium digital dental solutions with fast delivery across India.`
+    : activeBrand
+    ? `Shop all ${activeBrand.name} dental products at Digident. Quality dental products at the best prices.`
+    : "Browse the complete range of digital dental products at Digident. CAD/CAM solutions, implant components, ScanBridge libraries and more.";
+
   return (
     <div className="min-h-screen bg-gray-50/30">
+      <SEOHead
+        title={seoTitle}
+        description={seoDesc}
+        canonicalPath="/all-products"
+      />
+
       <Menu
         categories={menuData.categories}
         brands={menuData.brands}

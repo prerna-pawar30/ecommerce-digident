@@ -6,6 +6,7 @@ import { fetchProductById } from "../api/ApiService";
 import ProductDetails from '../components/productDetail/product-by-id/ProductDetails';
 import ProductTabs from '../components/productDetail/product-tabs/ProductTabs';
 import RelatedProducts from '../components/shopSection/RelatedProduct';
+import SEOHead from '../components/ui/SEOHead';
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -46,8 +47,50 @@ const ProductPage = () => {
     }
   };
 
+  const productStructuredData = product ? {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.images || [],
+    "description": product.shortDescription || `Buy ${product.name} at Digident`,
+    "sku": product.sku || productId,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand?.[0]?.name || "Digident"
+    },
+    "category": product.category?.name || "Dental Products",
+    "offers": {
+      "@type": "Offer",
+      "url": `https://shop.digident.in/productpage/${productId}`,
+      "priceCurrency": "INR",
+      "price": product.price,
+      "availability": (product.productStock > 0 || product.variants?.some(v => v.variantStock > 0))
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      "seller": { "@type": "Organization", "name": "Digident" }
+    },
+    "aggregateRating": product.ratingAvg > 0 ? {
+      "@type": "AggregateRating",
+      "ratingValue": product.ratingAvg,
+      "ratingCount": product.ratingCount || 1,
+      "bestRating": 5,
+      "worstRating": 1
+    } : undefined
+  } : null;
+
   return (
     <div className="py-16 min-h-screen flex flex-col bg-white">
+      {product && (
+        <SEOHead
+          title={`${product.name} - ${product.category?.name || "Dental Product"}`}
+          description={product.shortDescription || `Buy ${product.name} at Digident. Premium ${product.category?.name || "dental product"} for digital dentistry. Fast delivery across India.`}
+          canonicalPath={`/productpage/${productId}`}
+          image={product.images?.[0]}
+          type="product"
+          structuredData={productStructuredData}
+        />
+      )}
+
       <main className="flex-grow">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import ProductCard from "../../components/ui/ProductCard";
-import ProductSkeleton from "../../components/ui/ProductSkeleton"; 
+import ProductSkeleton from "../../components/ui/ProductSkeleton";
+import AdSenseAd from "../../components/ui/AdSenseAd";
 
 export default function ProductGrid({ 
   products = [], 
@@ -32,14 +33,28 @@ export default function ProductGrid({
     <>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
 
-        {/* PRODUCTS */}
+        {/* PRODUCTS with inline sponsored ad every 8 items */}
         {products.map((product, index) => (
-          <div 
-            key={product.productId}
-            ref={index === products.length - 1 ? lastItemRef : null}
-          >
-            <ProductCard product={product} />
-          </div>
+          <>
+            <div
+              key={product.productId}
+              ref={index === products.length - 1 ? lastItemRef : null}
+            >
+              <ProductCard product={product} />
+            </div>
+
+            {(index + 1) % 8 === 0 && index !== products.length - 1 && (
+              <div key={`ad-${index}`} className="col-span-2 lg:col-span-4">
+                <div className="relative">
+                  <span className="absolute top-1 left-2 text-[10px] text-gray-400 uppercase tracking-wide">
+                    Sponsored
+                  </span>
+                  {/* Replace slot value with your real AdSense ad slot ID */}
+                  <AdSenseAd slot="1060697153" format="horizontal" className="py-2" />
+                </div>
+              </div>
+            )}
+          </>
         ))}
 
         {/* INITIAL LOADING (SKELETON) */}
