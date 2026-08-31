@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import { FiShoppingCart } from "react-icons/fi";
 
-export default function ProductCard({ product, isLast, lastItemRef }) {
+export default function ProductCard({ product, isLast, lastItemRef, badge }) {
   // ✅ ID handling
   const pId = product.productId || product._id;
 
@@ -8,26 +9,40 @@ export default function ProductCard({ product, isLast, lastItemRef }) {
   const displayPrice = product.variants?.[0]?.variantPrice ?? product.price ?? 0;
 
   // ✅ Image handling (Checks variants first, then main images array)
-  const displayImage = product.variants?.[0]?.variantImages?.[0] || 
-                       (Array.isArray(product.images) ? product.images[0] : product.images) || 
-                       null;
+  const displayImage =
+    product.variants?.[0]?.variantImages?.[0] ||
+    (Array.isArray(product.images) ? product.images[0] : product.images) ||
+    null;
+
+  const categoryName = product.category?.name;
+  const cardBadge = badge || product.badge || product.tag || null;
 
   return (
     <div
       ref={isLast ? lastItemRef : null}
-      className="bg-white rounded-xl md:rounded-2xl overflow-hidden border border-[#E68736] hover:shadow-xl transition-all duration-300 flex flex-col group h-full"
+      className="group flex flex-col h-full bg-white border border-[#FDDCB5] rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-orange-100 hover:-translate-y-1 transition-all duration-300"
     >
+      {/* BADGE STRIP (only when a badge is provided) */}
+      {cardBadge && (
+        <div className="px-3 md:px-4 pt-3 md:pt-4">
+          <span className="inline-block text-[10px] md:text-xs font-bold px-2.5 md:px-3 py-1 rounded-full bg-orange-100 text-orange-700">
+            {cardBadge}
+          </span>
+        </div>
+      )}
+
       {/* IMAGE SECTION */}
-      <Link 
-        to={`/productpage/${pId}`} 
-        className="relative h-32 sm:h-52 w-full block overflow-hidden bg-white"
+      <Link
+        to={`/productpage/${pId}`}
+        className="relative h-32 sm:h-40 w-full block overflow-hidden"
       >
         {displayImage ? (
           <img
             src={displayImage}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 p-2"
+            draggable={false}
+            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs italic">
@@ -37,33 +52,33 @@ export default function ProductCard({ product, isLast, lastItemRef }) {
       </Link>
 
       {/* CONTENT SECTION */}
-      <div className="p-3 md:p-5 flex flex-col flex-grow">
+      <div className="p-3 md:p-4 flex flex-col flex-grow">
         {/* CATEGORY TAG */}
-        <p className="text-[#E68736] text-[10px] md:text-[12px] font-bold uppercase tracking-wider mb-1">
-          {product.category?.name}
-        </p>
+        {categoryName && (
+          <p className="text-[10px] md:text-xs text-orange-600 font-semibold uppercase tracking-wide mb-1">
+            {categoryName}
+          </p>
+        )}
 
         {/* PRODUCT TITLE */}
         <Link to={`/productpage/${pId}`}>
-          <h3 className="text-gray-800 font-bold text-[13px] md:text-[16px] leading-tight line-clamp-2 mb-4 h-[32px] md:h-[40px]">
-            {product.name} {product.category?.name ? `Compatible ${product.category.name}` : ''}
+          <h3 className="text-[#072434] font-bold text-[13px] md:text-base leading-snug line-clamp-2 min-h-[38px] md:min-h-[44px]">
+            {product.name}
+            {categoryName ? ` compatible ${categoryName}` : ""}
           </h3>
         </Link>
 
         {/* FOOTER (PRICE & BUTTON) */}
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-sm md:text-xl font-black text-gray-900">
-            ₹{displayPrice}
+        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+          <span className="text-[#072434] font-black text-sm md:text-lg whitespace-nowrap">
+            ₹{Number(displayPrice).toLocaleString("en-IN")}
           </span>
-          
+
           <Link
             to={`/productpage/${pId}`}
-            className="px-3 md:px-4 py-1.5 md:py-2 text-[11px] md:text-sm font-bold rounded-lg  text-white  transition-all"
-              style={{ 
-                        cursor: "pointer", 
-                        background: '#E68736', 
-                      }}
+            className="flex items-center justify-center gap-1.5 text-[11px] md:text-sm font-bold px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-orange-400 hover:bg-orange-500 active:scale-95 text-white transition-all duration-200"
           >
+            <FiShoppingCart size={14} />
             View
           </Link>
         </div>

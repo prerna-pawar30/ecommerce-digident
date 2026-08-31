@@ -92,7 +92,7 @@ const ProductPage = () => {
       )}
 
       <main className="flex-grow">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="site-container">
           
           {/* Breadcrumb */}
           <nav className="pt-4 text-sm text-gray-500 flex items-center gap-2">

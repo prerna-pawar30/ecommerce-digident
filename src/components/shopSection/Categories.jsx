@@ -14,7 +14,7 @@ const Categories = memo(
 
     return (
       <section className="py-10 bg-white w-full">
-        <div className="px-5 md:px-6 w-full max-w-[1440px] mx-auto">
+        <div className="site-container">
           <div className="mb-8">
             <h2 className="text-2xl md:text-4xl font-extrabold text-[#072434]">
               Top{" "}

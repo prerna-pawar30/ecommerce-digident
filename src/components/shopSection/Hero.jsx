@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
@@ -13,21 +13,12 @@ function Hero({ bannerData = [], loading }) {
   // Update: Handle the nested "banners" array from the new API structure
   // This checks if bannerData is the full "data" object or just the array
   const bannersArray = bannerData?.banners || (Array.isArray(bannerData) ? bannerData : []);
-  
-  useEffect(() => {
-    const loadAOS = async () => {
-      const AOS = (await import("aos")).default;
-      await import("aos/dist/aos.css");
-      AOS.init({ once: true });
-    };
-    loadAOS();
-  }, []);
 
   const showLoading = loading || bannersArray.length === 0;
 
   return (
     <section className="py-2 md:py-10 bg-white w-full">
-      <div className="px-4 w-full">
+      <div className="site-container">
         {showLoading ? (
           <div className="w-full rounded-3xl h-[110px] sm:h-[240px] md:h-[290px] lg:h-[380px] flex items-center justify-center">
             <div className="flex flex-col items-center">

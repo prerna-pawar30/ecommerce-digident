@@ -92,7 +92,7 @@ export default function CheckoutAddressModule() {
   return (
     <div className="py-8 sm:py-12 md:py-16 min-h-screen font-sans bg-gray-50/30">
       <DynamicProgressStepper />
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="site-container">
         <Breadcrumb />
       </div>
 

@@ -65,19 +65,18 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
 
-    <!-- Bootstrap Icons -->
+    <!-- Fonts (non-blocking) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
 
-    <!-- Razorpay -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <!-- Google AdSense -->
-    <!-- Replace ca-pub-XXXXXXXXXXXXXXXX with your real AdSense Publisher ID -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9351805624211436"
-     crossorigin="anonymous"></script>
+    <!-- Razorpay (loaded on demand from the checkout page) -->
+    <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">

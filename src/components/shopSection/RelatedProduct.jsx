@@ -69,7 +69,7 @@ const RelatedProducts = ({ brandId, currentProductId }) => {
   if (!isLoading && related.length === 0) return null;
 
   return (
-    <div className="mt-10 border-t border-gray-100 pt-10 px-2 md:px-0 mb-10">
+    <div className="site-container mt-10 border-t border-gray-100 pt-10 mb-10">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-orange-500 text-xs font-black uppercase tracking-[0.2em] mb-1">

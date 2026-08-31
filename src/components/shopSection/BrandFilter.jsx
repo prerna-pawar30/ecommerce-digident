@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { BiSearch } from "react-icons/bi";
 
 function BrandFilter({ brands, onClose, onSwitchToCategories, onSelect }) {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ function BrandFilter({ brands, onClose, onSwitchToCategories, onSelect }) {
           
           {/* Search Bar */}
           <div className="relative mb-4">
-            <i className="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <BiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search brand"

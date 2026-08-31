@@ -3,6 +3,8 @@ import ProductCard from "../components/ui/ProductCard";
 import { fetchBestSellingProducts } from "../api/ApiService";
 import { useNavigate } from "react-router-dom";
 
+const BADGES = ["Bestseller", "Top Rated", "Hot Pick", "Trending"];
+
 export default function HotSellingPage() {
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ export default function HotSellingPage() {
   if (isLoading) {
     return (
       <div className="bg-gray-50/50 min-h-screen py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="site-container">
           <div className="h-8 w-64 bg-gray-200 rounded animate-pulse mb-3" />
           <div className="h-4 w-96 bg-gray-200 rounded animate-pulse mb-12" />
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -65,7 +67,7 @@ export default function HotSellingPage() {
 
   return (
     <section className="bg-gray-50/50 min-h-screen py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         
         {/* Header Section */}
         <header className="border-b border-gray-200 pb-8 mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
@@ -109,12 +111,12 @@ export default function HotSellingPage() {
         ) : (
           /* Products Grid Layout */
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
-            {productsList.map((product) => (
-              <div 
+            {productsList.map((product, i) => (
+              <div
                 key={product.productId || product._id}
                 className="transform transition-transform duration-300 hover:-translate-y-1.5"
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} badge={BADGES[i % BADGES.length]} />
               </div>
             ))}
           </div>

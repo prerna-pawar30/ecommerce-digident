@@ -351,7 +351,7 @@ const CheckoutPage = () => {
     <div className="py-10 md:py-16 min-h-screen bg-gray-50/30 font-sans">
       <DynamicProgressStepper />
 
-      <div className="max-w-7xl mx-auto px-4 mb-4">
+      <div className="site-container mb-4">
         <button
           onClick={() => navigate("/cart")}
           className="flex items-center gap-1 text-sm font-bold text-gray-400 hover:text-[#E68736] transition-all"
@@ -360,7 +360,7 @@ const CheckoutPage = () => {
         </button>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="site-container grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left: address forms */}
         <div className="lg:col-span-2 space-y-6">
           <ShippingAddress address={deliveryAddress} onNavigate={navigate} />

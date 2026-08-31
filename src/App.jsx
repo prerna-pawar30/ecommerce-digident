@@ -16,11 +16,11 @@ function App() {
 
   useEffect(() => {
     // 1. AOS init
-    import("aos")
-      .then((AOS) => {
+    Promise.all([import("aos"), import("aos/dist/aos.css")])
+      .then(([AOS]) => {
         AOS.default.init({
-          duration: 1000,
-          once: false,
+          duration: 700,
+          once: true,
           offset: 100,
         });
       })

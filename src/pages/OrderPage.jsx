@@ -268,7 +268,7 @@ const OrderDetailsPage = () => {
 
   return (
     <div className="py-10 min-h-screen pb-20 font-sans">
-      <div className="container mx-auto px-4 max-w-5xl">
+      <div className="site-container">
         <Breadcrumb />
         {order.orderStatus === "pending" && (
           <div className="my-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg font-semibold text-center">

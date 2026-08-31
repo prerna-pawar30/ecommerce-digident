@@ -20,10 +20,10 @@ const Brand = memo(({ brands = [], loading, onBrandClick }) => {
   }, [sortedBrands, showAll]);
 
   return (
-    <section className="py-8 sm:py-16  w-full"
+    <section className="pt-6 pb-6 sm:pt-8 sm:pb-8  w-full"
     >
-      <div className="px-4 sm:px-6 w-full max-w-8xl mx-auto">
-        <div className="flex justify-between items-end mb-8">
+      <div className="site-container">
+        <div className="flex justify-between items-end mb-6">
           <div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-gray-900">
               Top{" "}

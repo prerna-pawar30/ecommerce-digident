@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import ProductCard from "../ui/ProductCard";
 
+const BADGES = ["Bestseller", "Top Rated", "Hot Pick", "Trending"];
+
 export default function HotSelling({ products, loading }) {
   const navigate = useNavigate();
 
@@ -20,8 +22,8 @@ export default function HotSelling({ products, loading }) {
   const displayedProducts = cleanProductsArray.slice(0, 8);
 
   return (
-    <section className="w-full py-10 bg-white">
-      <div className=" px-4">
+    <section className="w-full pt-4 pb-6 bg-white">
+      <div className="site-container">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
             Hot <span className="text-orange-500">Selling</span>
@@ -40,10 +42,11 @@ export default function HotSelling({ products, loading }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {displayedProducts.map((product) => (
+            {displayedProducts.map((product, i) => (
               <ProductCard
                 key={product.productId || product._id}
                 product={product}
+                badge={BADGES[i % BADGES.length]}
               />
             ))}
           </div>

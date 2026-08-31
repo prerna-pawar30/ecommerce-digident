@@ -34,10 +34,11 @@ export default function Footer() {
       
     
     >
-      <div 
-        className="mx-auto pt-26 pb-10 bg-cover bg-center bg-no-repeat px-6 sm:px-10"
+      <div
+        className="pt-26 pb-10 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${footerBg})` }}
       >
+       <div className="site-container">
         {/* The rest of your content remains the same */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 relative z-10">
 
@@ -140,6 +141,7 @@ export default function Footer() {
             Copyright © {new Date().getFullYear()} Digident India | All rights reserved
           </p>
         </div>
+       </div>
       </div>
     </footer>
   );

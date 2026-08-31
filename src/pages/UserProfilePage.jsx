@@ -18,7 +18,7 @@ import EditProfileModal from "../components/user-profile/EditProfileModal";
 const ProfileSkeleton = () => (
   <div className="min-h-screen pb-20 font-sans animate-pulse bg-gray-50/30">
     <div className="h-38 md:h-94 w-full bg-gray-200" />
-    <main className="max-w-6xl mx-auto px-4 md:px-8 mt-12 md:mt-24">
+    <main className="site-container mt-12 md:mt-24">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-6">
           <div className="h-40 bg-gray-200 rounded-[2rem]" />
@@ -186,7 +186,7 @@ const UserProfile = () => {
     <div className="min-h-screen pb-20 font-sans">
       <ProfileHeader user={user} onEditClick={() => setIsEditModalOpen(true)} />
 
-      <main className="max-w-6xl mx-auto px-4 md:px-8 mt-26 md:mt-24">
+      <main className="site-container mt-26 md:mt-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* SIDEBAR */}

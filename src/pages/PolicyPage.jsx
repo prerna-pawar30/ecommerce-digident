@@ -7,12 +7,12 @@ const LegalLayout = ({ title, children }) => {
 
   return (
     <div className="min-h-screen pt-[100px] pb-24 font-sans antialiased text-slate-800">
-      <div className="max-w-4xl mx-auto px-6 mb-12">
+      <div className="site-container mb-12">
         <h1 className="text-4xl md:text-3xl font-black text-center text-slate-900 uppercase tracking-tighter mb-4">
           {title}
         </h1>
       </div>
-      <article className="max-w-4xl mx-auto px-6">
+      <article className="site-container">
         <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/40 rounded-[2rem] p-8 md:p-20">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             {children}

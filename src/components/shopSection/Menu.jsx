@@ -8,7 +8,7 @@ function Menu() {
   return (
     // Added pt-4 (padding-top) and ensure no vertical padding elsewhere
     <section className="bg-white w-full top-0 z-30 pt-12 pb-0 border-b border-gray-200">
-      <div className="w-full max-w-[1440px] mx-auto">
+      <div className="site-container">
         {/* h-12 or h-14 keeps the height consistent without needing bottom padding */}
         <div className="flex flex-row items-center justify-center gap-12 md:gap-32 w-full h-14">
           

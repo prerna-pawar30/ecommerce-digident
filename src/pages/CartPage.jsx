@@ -82,7 +82,7 @@ export default function CartPage() {
   // A. Loading / Idle state: Show Skeleton
   if (status === "loading" || status === "idle") {
     return (
-      <div className="py-6 sm:py-10 max-w-7xl mx-auto min-h-screen bg-white px-4">
+      <div className="site-container py-6 sm:py-10 min-h-screen bg-white">
         <div className="py-3 sm:py-5 opacity-50">
           <DynamicProgressStepper />
         </div>
@@ -104,7 +104,7 @@ export default function CartPage() {
 
   // C. Show actual Cart Content
   return (
-    <div className="py-6 sm:py-10 max-w-7xl mx-auto min-h-screen bg-white px-4">
+    <div className="site-container py-6 sm:py-10 min-h-screen bg-white">
       <div className="py-3 sm:py-5">
         <DynamicProgressStepper />
       </div>

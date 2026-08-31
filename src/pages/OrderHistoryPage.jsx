@@ -52,7 +52,7 @@ const OrderHistory = () => {
 
   return (
     <div className="py-8 min-h-screen">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="site-container">
         <Breadcrumb productName="My Orders" />
         <div className="mt-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">Order History</h1>

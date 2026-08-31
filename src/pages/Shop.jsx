@@ -15,7 +15,6 @@ import Menu from "../components/shopSection/Menu";
 import Brand from "../components/shopSection/Brand";
 import Categories from "../components/shopSection/Categories";
 import RelatedProducts from "../components/shopSection/RelatedProduct";
-import AdSenseAd from "../components/ui/AdSenseAd";
 import SEOHead from "../components/ui/SEOHead";
 
 function Shop() {
@@ -142,12 +141,6 @@ function Shop() {
           handleFilterNavigation({ brand: brandId })
         }
       />
-
-      {/* Mid-page AdSense ad between Brand and HotSelling sections */}
-      {/* Replace slot value with your real AdSense ad slot ID */}
-      <div className="px-4 py-2">
-        <AdSenseAd slot="1060697153" format="auto" />
-      </div>
 
       {/* This component will now correctly receive your products array fallback */}
       <HotSelling

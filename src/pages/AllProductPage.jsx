@@ -136,7 +136,7 @@ const { data: menuData = { categories: [], brands: [] } } = useQuery({
         brands={menuData.brands}
       />
 
-      <section className="max-w-7xl mx-auto px-4 py-8">
+      <section className="site-container py-8">
         <FilterHeader
           menuData={menuData}
           brandId={brandId}

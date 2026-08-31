@@ -69,7 +69,7 @@ export default function AddressModule() {
 
   return (
     <div className="py-8 md:py-12 min-h-screen ">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="site-container">
         <Breadcrumb />
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-8 mb-10">
