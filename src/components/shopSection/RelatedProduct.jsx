@@ -94,7 +94,7 @@ const RelatedProducts = ({ brandId, currentProductId }) => {
           640: { slidesPerView: 2.2 },
           1024: { slidesPerView: 4 },
         }}
-        className="pb-10 !px-1"
+        className="pt-2 pb-10 !px-1"
       >
         {isLoading
           ? [1, 2, 3, 4].map((i) => (

@@ -29,16 +29,20 @@ export default function FilterHeader({
 
     if (isValid(categoryId)) {
       const cat = menuData?.categories?.find(
-        (c) => String(c.categoryId) === String(categoryId)
+        (c) =>
+          String(c._id) === String(categoryId) ||
+          String(c.categoryId) === String(categoryId)
       );
       return cat?.name || "Category Filter";
     }
 
     if (isValid(brandId)) {
       const brand = menuData?.brands?.find(
-        (b) => String(b.brandId) === String(brandId)
+        (b) =>
+          String(b._id) === String(brandId) ||
+          String(b.brandId) === String(brandId)
       );
-      return brand?.name || "Brand Filter";
+      return brand?.brandName || brand?.name || "Brand Filter";
     }
 
     if (isValid(bannerId)) return "Special Collection";

@@ -51,7 +51,7 @@ function App() {
       <ScrollToTop />
       <Header />
 
-      <main className="container content pt-[85px]">
+      <main className="container content">
         <Suspense
           fallback={
             <div className="flex flex-col justify-center items-center py-40 gap-4">

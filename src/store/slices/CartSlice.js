@@ -26,7 +26,7 @@ export const addItemToCart = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await apiClient.post(
+      await apiClient.post(
         `/api/v1/cart/add/${productId}`,
         {
           variantId,
@@ -35,7 +35,11 @@ export const addItemToCart = createAsyncThunk(
           quantity,
         }
       );
-      return res.data.data.cartResponse;
+      // The add response lags one item behind the real cart, which left the
+      // header count stale until the cart page re-fetched. Re-read the canonical
+      // cart from the server so every subscriber updates immediately.
+      const res = await apiClient.get("/api/v1/cart/get");
+      return Array.isArray(res.data?.data?.items) ? res.data.data.items : [];
     } catch (err) {
       return rejectWithValue(
         err.response?.data?.message || "Add failed"

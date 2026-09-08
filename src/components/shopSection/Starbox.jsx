@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from "react";
+import { HiCube, HiTag, HiBadgeCheck, HiCurrencyRupee } from "react-icons/hi";
 
 /* Counts from 0 → target over `duration` ms, starts when element enters viewport */
 function useCountUp(target, duration = 1800) {
@@ -38,18 +39,19 @@ function useCountUp(target, duration = 1800) {
   return { count, ref };
 }
 
-const StatItem = ({ value, label, icon, delay = 0 }) => {
+const StatItem = ({ value, label, icon }) => {
   const isNumber = typeof value === "number" && value > 0;
   const { count, ref } = useCountUp(isNumber ? value : 0, 1800);
 
   return (
     <div
       ref={ref}
-      className="flex items-center gap-2.5"
-      style={{ animationDelay: `${delay}ms` }}
+      className="flex flex-row items-center justify-center gap-1.5 sm:gap-2.5 text-left"
     >
-      <span className="text-lg">{icon}</span>
-      <p className="font-bold text-[#3C4959] text-sm whitespace-nowrap">
+      <span className="flex items-center justify-center w-5 h-5 sm:w-auto sm:h-auto rounded-full bg-white sm:bg-transparent shadow-sm sm:shadow-none text-[#E68736] text-xs sm:text-lg shrink-0">
+        {icon}
+      </span>
+      <p className="font-bold text-[#3C4959] text-xs sm:text-sm whitespace-nowrap">
         {isNumber ? (
           <>
             <span
@@ -73,23 +75,26 @@ const StatItem = ({ value, label, icon, delay = 0 }) => {
   );
 };
 
+const StaticStatItem = ({ text, icon }) => (
+  <div className="flex flex-row items-center justify-center gap-1.5 sm:gap-2.5 text-left">
+    <span className="flex items-center justify-center w-5 h-5 sm:w-auto sm:h-auto rounded-full bg-white sm:bg-transparent shadow-sm sm:shadow-none text-[#E68736] text-xs sm:text-lg shrink-0">
+      {icon}
+    </span>
+    <p className="font-bold text-[#3C4959] text-xs sm:text-sm whitespace-nowrap">
+      {text}
+    </p>
+  </div>
+);
+
 const Starbox = memo(({ brandCount = 0, productCount = 0 }) => {
   return (
     <section className="site-container">
-      <div className="border border-[#F0CDBE] shadow-sm rounded-xl py-2 sm:py-4 bg-[#F7E6DC] px-5 sm:px-10">
-        <div className="grid grid-cols-2 gap-y-3 sm:flex sm:justify-around">
-          <StatItem value={productCount} label="Products"  delay={0} />
-          <StatItem value={brandCount}   label="Brands"    delay={150} />
-
-          <div className="flex items-center gap-2.5">
-            
-            <p className="font-bold text-[#3C4959] text-sm">100% Original</p>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-           
-            <p className="font-bold text-[#3C4959] text-sm">Best Price</p>
-          </div>
+      <div className="border border-[#F0CDBE] shadow-sm rounded-xl py-2 sm:py-4 bg-[#F7E6DC] px-4 sm:px-10">
+        <div className="grid grid-cols-2 gap-y-1.5 gap-x-2 sm:flex sm:justify-around sm:gap-0">
+          <StatItem value={productCount} label="Products" icon={<HiCube />} />
+          <StatItem value={brandCount} label="Brands" icon={<HiTag />} />
+          <StaticStatItem text="100% Original" icon={<HiBadgeCheck />} />
+          <StaticStatItem text="Best Price" icon={<HiCurrencyRupee />} />
         </div>
       </div>
     </section>

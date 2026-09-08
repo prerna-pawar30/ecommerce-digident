@@ -6,7 +6,7 @@ const OrderFilterBar = ({
   selectedYear, setSelectedYear 
 }) => {
   return (
-    <div className="bg-white p-4 rounded-xl border border-orange-200 flex flex-col md:flex-row gap-4 mb-8">
+    <div className="bg-white p-4 rounded-xl border border-orange-200 flex flex-col md:flex-row gap-4 mt-1 mb-8">
       <div className="relative flex-grow">
         <input
           type="text"

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState, useRef, useMemo } from "react"; // Added useMemo
+import { useEffect, useState, useRef, useMemo, useLayoutEffect } from "react"; // Added useMemo
 import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { useSelector, useDispatch, shallowEqual } from "react-redux"; // Added shallowEqual
 import {
@@ -25,6 +25,8 @@ export default function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
   const profileRef = useRef(null);
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -95,13 +97,29 @@ export default function Header() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  // Keep the spacer in sync with the fixed header's real height so page
+  // content never ends up hidden underneath it.
+  useLayoutEffect(() => {
+    if (isAuthPage || !headerRef.current) return;
+
+    const el = headerRef.current;
+    const updateHeight = () => setHeaderHeight(el.offsetHeight);
+
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isAuthPage, isDesktop, isAuthenticated]);
+
   if (isAuthPage) return null;
   return (
     <>
       <header
+        ref={headerRef}
         className={`fixed top-0 left-0 w-full z-50 transition-all shadow-md bg-[#F7E6DC]
-        ${isDesktop ? "h-[85px] flex items-center justify-between px-8" : "pt-3 pb-2 px-4"}`}
-         
+        ${isDesktop ? "h-[68px] flex items-center justify-between px-8" : "pt-2 pb-1.5 px-4"}`}
+
       >
         {/* TOP ROW: Logo & Actions */}
         <div className={`flex items-center justify-between w-full ${isDesktop ? "contents" : "mb-3"}`}>
@@ -266,7 +284,7 @@ export default function Header() {
       </header>
 
       {/* Spacer to prevent content from being hidden under the fixed header */}
-      <div className={isDesktop ? "h-[10px]" : "h-[20px]"} />
+      <div style={{ height: headerHeight }} />
 
       {/* MOBILE DRAWER */}
       {!isDesktop && (

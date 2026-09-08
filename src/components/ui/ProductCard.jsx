@@ -20,7 +20,7 @@ export default function ProductCard({ product, isLast, lastItemRef, badge }) {
   return (
     <div
       ref={isLast ? lastItemRef : null}
-      className="group flex flex-col h-full bg-white border border-[#FDDCB5] rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-orange-100 hover:-translate-y-1 transition-all duration-300"
+      className="group flex flex-col h-full border border-[#FDDCB5] rounded-xl overflow-hidden hover:shadow-lg hover:shadow-orange-100 hover:border-[#E68736] transition-shadow duration-300"
     >
       {/* BADGE STRIP (only when a badge is provided) */}
       {cardBadge && (
@@ -34,7 +34,7 @@ export default function ProductCard({ product, isLast, lastItemRef, badge }) {
       {/* IMAGE SECTION */}
       <Link
         to={`/productpage/${pId}`}
-        className="relative h-32 sm:h-40 w-full block overflow-hidden"
+        className="relative h-40 sm:h-48 w-full block overflow-hidden"
       >
         {displayImage ? (
           <img
@@ -42,7 +42,7 @@ export default function ProductCard({ product, isLast, lastItemRef, badge }) {
             alt={product.name}
             loading="lazy"
             draggable={false}
-            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs italic">
